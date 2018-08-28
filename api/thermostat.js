@@ -3,6 +3,7 @@ const router                  = express.Router();
 const Base64                  = require('js-base64').Base64;
 const body                    = require('body/form');
 const address                 = require('address');
+const publicIp                = require('public-ip');
 const getToken                = require('./thermostatRequests.js').getToken;
 const getLocations            = require('./thermostatRequests.js').getLocations;
 const refreshToken            = require('./thermostatRequests.js').refreshToken;
@@ -14,33 +15,41 @@ const db                      = require('../db/database.js');
 const logger                  = require('../logger.js');
 
 var apiKey, secret, redirect_uri;
+var authorizationCode, url;
 
-address(function (err, addrs) {
+publicIp.v4().then(ip => {
+  logger(`Public IP address: ${ip}`,"green");
 
-  if (addrs.ip == '192.168.2.18') {
-    //DEV
-    apiKey = "d9FAKwlSX1rfkdTIy8Aus3yOtl1N2djq";
-    secret = "uHG3V9o26YfpG50C"
-    redirect_uri = "http://145.129.149.96:3456/thermostat/code";
-  } else if(addrs.ip == '192.168.2.11') {
-    //LIVE
-    apiKey = "Ei1blEcsjbXATzCosL2uxpEDkCKZv5t8";
-    secret = "eyX7fNOqDD3xuVFL"
-    redirect_uri = "http://145.129.149.96:2345/thermostat/code";
-  } else {
-    logger('Interne IP-adressen zijn gewijzigd!', 'red');
-  }
+  address(function (err, addrs) {
 
-});
+    if (addrs.ip == '192.168.2.18') {
+      //DEV
+      apiKey = "d9FAKwlSX1rfkdTIy8Aus3yOtl1N2djq";
+      secret = "uHG3V9o26YfpG50C"
+      redirect_uri = "http://"+ip+":3456/thermostat/code";
+    } else if(addrs.ip == '192.168.2.11') {
+      //LIVE
+      apiKey = "Ei1blEcsjbXATzCosL2uxpEDkCKZv5t8";
+      secret = "eyX7fNOqDD3xuVFL"
+      redirect_uri = "http://"+ip+":2345/thermostat/code";
+    } else {
+      logger('Interne IP-adressen zijn gewijzigd!', 'red');
+    }
+
+    authorizationCode = Base64.encode(apiKey+":"+secret);
+    url = "https://api.honeywell.com/oauth2/authorize?response_type=code&redirect_uri=" + redirect_uri + "&client_id=" + apiKey;
+
+
+  });
+
+})
+
+
 
 var Code;
 var Tokens;
 var Locations, LocationId, DeviceId, ThermostatDevice; //559728, LCC-00D02DEBB14D
 
-const authorizationCode = Base64.encode(apiKey+":"+secret);
-
-
-var url = "https://api.honeywell.com/oauth2/authorize?response_type=code&redirect_uri=" + redirect_uri + "&client_id=" + apiKey;
 
 router.get('/', function(req, res){
   res.render("thermostat",{
@@ -257,7 +266,7 @@ db.connect(function (database) {
             if (obj.changeableValues != undefined && obj.indoorTemperature != undefined && obj.outdoorTemperature != undefined) {
               database.add(obj,database.Device,function(err,Device) {
                 if (err) logger(`Database: ERROR: ${err}`,'red');
-                logger(`Database: Device added --> ${Device}`,'green');
+                //logger(`Database: Device added --> ${Device}`,'green');
                 ThermostatDevice = Device;
               }); //Closing database.add
             } else {
