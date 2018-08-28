@@ -266,7 +266,7 @@ db.connect(function (database) {
             if (obj.changeableValues != undefined && obj.indoorTemperature != undefined && obj.outdoorTemperature != undefined) {
               database.add(obj,database.Device,function(err,Device) {
                 if (err) logger(`Database: ERROR: ${err}`,'red');
-                logger(`Database: Device added --> ${Device}`,'green');
+                //logger(`Database: Device added --> ${Device}`,'green');
                 ThermostatDevice = Device;
               }); //Closing database.add
             } else {
