@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    include tagmanagertop.js
+    link(rel='stylesheet' href='static/style.css')
+    meta(name='viewport', content='width=device-width initial-scale=1.0')
+    title= title
+  body
+    include tagmanagerbottom.js
+    h1 Notifier
+    p
+      form(method='POST' action='/notifier')
+        input(type='text' name='message')
+        br
+        select(name='dialect')
+          option(value='en-US') Engels USA
+          option(value='en-GB') Engels Brits
+          option(value='nl-NL') Nederlands
+          option(value='de-DE') Duits
+          option(value='fr-FR') Frans
+        input(type='submit' value='Verstuur')
+    p
+      a(class='link' id='home' href='/') Home

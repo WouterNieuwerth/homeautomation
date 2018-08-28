@@ -1,0 +1,88 @@
+doctype html
+html
+  head
+    include tagmanagertop.js
+    link(rel='stylesheet' href='static/style.css')
+    meta(name='viewport', content='width=device-width initial-scale=1.0')
+    title= title
+  body
+    include tagmanagerbottom.js
+    h1 Thermostaat
+    if locations
+      p
+        | We zijn ingelogd op de thermostaat!
+      if thermostat
+        p
+          table
+            tr
+              td Temperatuur binnen:
+              td Temperatuur buiten:
+            tr
+              td(class='temperatuur')= thermostat.indoorTemperature
+              td(class='temperatuur')= thermostat.outdoorTemperature
+            tr
+              td Luchtvochtigheid:
+              td Instelling thermostaat:
+            tr
+              td(class='temperatuur')= thermostat.displayedOutdoorHumidity
+              td(class='temperatuur')= thermostat.changeableValues.heatSetpoint
+      p
+        | Pas hieronder de instellingen van de thermostaat aan:
+      p
+        table
+          tr
+            td
+              form(method='POST' action='/thermostat/settemperature')
+                input(type='hidden' name='temperature', value='16.5')
+                input(class='btn-small' type='submit' value='Laag')
+            td
+              form(method='POST' action='/thermostat/settemperature')
+                input(type='hidden' name='temperature', value='21.0')
+                input(class='btn-small' type='submit' value='Hoog')
+          tr
+            form(method='POST' action='/thermostat/settemperature')
+              td
+                select(name='temperature')
+                  option(value='16.5') 16.5 graden
+                  option(value='17.0') 17.0 graden
+                  option(value='17.5') 17.5 graden
+                  option(value='18.0') 18.0 graden
+                  option(value='18.5') 18.5 graden
+                  option(value='19.0') 19.0 graden
+                  option(value='19.5') 19.5 graden
+                  option(value='20.0') 20.0 graden
+                  option(value='20.5') 20.5 graden
+                  option(value='21.0') 21.0 graden
+              td
+                input(class='btn-small' type='submit' value='Verstuur')
+          tr
+            form(method='POST' action='/thermostat/thermostatgraphs')
+              td
+                select(name='limit')
+                  option(value='50') 50 datapunten
+                  option(value='100') 100 datapunten
+                  option(value='200') 200 datapunten
+                  option(value='500') 500 datapunten
+                  option(value='1000') 1000 datapunten
+                  option(value='5000') 5000 datapunten
+              td
+                input(class='btn-small' type='submit' value='Verstuur')
+          tr
+            td(colspan="2")
+              a(class='btn' id='reset_thermostat' href='/api/returntoschedule') Volg programma
+      p
+        a(class='btn' id='graphs' href='/thermostat/thermostatgraphs') Grafieken
+      p
+        a(class='btn' id='home' href='/') Home
+      p
+        a(class='link' id='flush' href='/thermostat/flush') Uitloggen
+    else
+      p
+        | We zijn nog niet ingelogd op de thermostaat. Daarom moet je eerst
+        | inloggen en locations ophalen.
+        br
+        a(class='btn' id='login' href='/thermostat/login') Stap 1: Inloggen
+      p
+        a(class='btn' id='graphs' href='/thermostat/thermostatgraphs') Grafieken
+      p
+        a(class='btn' id='home' href='/') Home

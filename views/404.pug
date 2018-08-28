@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    include tagmanagertop.js
+    link(rel='stylesheet' href='static/style.css')
+    title= title
+  body(class="novid")
+    include tagmanagerbottom.js
+    h1 Ho! Stop! Er ging iets fout.
+    p
+      | Deze pagina kon niet worden gevonden. Gebruik de link hieronder om
+      | terug te keren.
+      br
+      a(href='/') Terug naar de Homepage.    

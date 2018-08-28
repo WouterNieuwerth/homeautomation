@@ -1,0 +1,25 @@
+{
+  "name": "homeautomation",
+  "version": "1.0.0",
+  "description": "This is Wouter Nieuwerth his own home automation project.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WouterNieuwerth/homeautomation.git"
+  },
+  "keywords": [
+    "Wouter",
+    "Nieuwerth",
+    "wouternieuwerth",
+    "homeautomation"
+  ],
+  "author": "Wouter Nieuwerth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WouterNieuwerth/homeautomation/issues"
+  },
+  "homepage": "https://github.com/WouterNieuwerth/homeautomation#readme"
+}
