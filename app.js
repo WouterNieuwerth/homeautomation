@@ -110,6 +110,8 @@ app.get('/api/:action', function (req, res) {
       pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','toggle');
       pimatic_api.callDeviceAction('bolletjes','elro-1','toggle');
       pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','toggle');
+      pimatic_api.callDeviceAction('Keuken','tradfri_131076','toggle');
+      pimatic_api.callDeviceAction('Tafel','tradfri_131074','toggle');
       //notify('Toggled everything.', _.sample(dialects));
       break;
     case 'everything-on':
@@ -118,6 +120,8 @@ app.get('/api/:action', function (req, res) {
       pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOn');
       pimatic_api.callDeviceAction('bolletjes','elro-1','turnOn');
       pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOn');
+      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOn');
+      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOn');
       //notify('Switched everything on.', _.sample(dialects));
       break;
     case 'everything-off':
@@ -126,13 +130,16 @@ app.get('/api/:action', function (req, res) {
       pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOff');
       pimatic_api.callDeviceAction('bolletjes','elro-1','turnOff');
       pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOff');
+      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOff');
+      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOff');
       //notify('Switched everything off.', _.sample(dialects));
       break;
     case 'togglelights':
       pimatic_api.callDeviceAction('led-lamp1','led-lamp','toggle');
       pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','toggle');
       pimatic_api.callDeviceAction('bolletjes','elro-1','toggle');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOn');
+      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','toggle');
+      pimatic_api.callDeviceAction('Keuken','tradfri_131076','toggle');
       //notify('Toggled the lights.', _.sample(dialects));
       break;
     case 'the lights':
@@ -140,6 +147,8 @@ app.get('/api/:action', function (req, res) {
       pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','toggle');
       pimatic_api.callDeviceAction('bolletjes','elro-1','toggle');
       pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','toggle');
+      pimatic_api.callDeviceAction('Keuken','tradfri_131076','toggle');
+      pimatic_api.callDeviceAction('Tafel','tradfri_131074','toggle');
       //notify('Toggled the lights.', _.sample(dialects));
       break;
     case 'lights-on':
@@ -147,6 +156,8 @@ app.get('/api/:action', function (req, res) {
       pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOn');
       pimatic_api.callDeviceAction('bolletjes','elro-1','turnOn');
       pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOn');
+      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOn');
+      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOn');
       //notify('Switched the lights on.', _.sample(dialects));
       break;
     case 'lights-off':
@@ -154,6 +165,8 @@ app.get('/api/:action', function (req, res) {
       pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOff');
       pimatic_api.callDeviceAction('bolletjes','elro-1','turnOff');
       pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOff');
+      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOff');
+      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOff');
       //notify('Switched the lights off.', _.sample(dialects));
       break;
     case 'toggleledlamp':
@@ -227,6 +240,8 @@ app.get('/api/:action', function (req, res) {
       pimatic_api.callDeviceAction('bolletjes','elro-1','turnOff');
       pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOff');
       pimatic_api.callDeviceAction('boiler','boiler','turnOff');
+      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOff');
+      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOff');
       var APIKeys = getAPIKeys();
       //logger(JSON.stringify(APIKeys.Locations),'red');
       for(i=0; i<APIKeys.Locations.length; i++) {
