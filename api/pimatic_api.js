@@ -2,7 +2,7 @@ const io      = require("socket.io-client");
 const logger  = require('../logger.js');
 
 const host = "192.168.2.11";
-const port = 80;
+const port = 8080;
 const u = encodeURIComponent("admin");
 const p = encodeURIComponent("yvonneyvonne");
 var socket = io("http://" + host + ":" + port + "/?username=" + u + "&password=" + p, {

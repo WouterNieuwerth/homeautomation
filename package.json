@@ -21,5 +21,23 @@
   "bugs": {
     "url": "https://github.com/WouterNieuwerth/homeautomation/issues"
   },
-  "homepage": "https://github.com/WouterNieuwerth/homeautomation#readme"
+  "homepage": "https://github.com/WouterNieuwerth/homeautomation#readme",
+  "dependencies": {
+    "address": "^1.0.3",
+    "body": "^5.1.0",
+    "castv2-client": "^1.2.0",
+    "chalk": "^2.4.1",
+    "discover-chromecasts": "^1.0.2",
+    "express": "^4.16.3",
+    "google-tts-api": "0.0.2",
+    "js-base64": "^2.4.9",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "mongoose": "^5.2.13",
+    "node-schedule": "^1.3.0",
+    "public-ip": "^2.4.0",
+    "pug": "^2.0.3",
+    "socket.io-client": "^2.1.1",
+    "uuid": "^3.3.2"
+  }
 }
