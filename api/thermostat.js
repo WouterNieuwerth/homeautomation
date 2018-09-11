@@ -13,6 +13,7 @@ const setTemperature          = require('./thermostatRequests.js').setTemperatur
 const notifyThermostatOffline = require('./thermostatRequests').notifyThermostatOffline;
 const db                      = require('../db/database.js');
 const logger                  = require('../logger.js');
+const private                 = require('../../private/private.js');
 
 var apiKey, secret, redirect_uri;
 var authorizationCode, url;
@@ -24,13 +25,13 @@ publicIp.v4().then(ip => {
 
     if (addrs.ip == '192.168.2.18') {
       //DEV
-      apiKey = "d9FAKwlSX1rfkdTIy8Aus3yOtl1N2djq";
-      secret = "uHG3V9o26YfpG50C"
+      apiKey = private.honeywell_apiKey_test;
+      secret = private.honeywell_secret_test;
       redirect_uri = "http://"+ip+":3456/thermostat/code";
     } else if(addrs.ip == '192.168.2.11') {
       //LIVE
-      apiKey = "Ei1blEcsjbXATzCosL2uxpEDkCKZv5t8";
-      secret = "eyX7fNOqDD3xuVFL"
+      apiKey = private.honeywell_apiKey_live;
+      secret = private.honeywell_secret_live;
       redirect_uri = "http://"+ip+":2345/thermostat/code";
     } else {
       logger('Interne IP-adressen zijn gewijzigd!', 'red');

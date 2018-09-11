@@ -1,10 +1,11 @@
 const io      = require("socket.io-client");
 const logger  = require('../logger.js');
+const private = require('../../private/private.js');
 
 const host = "192.168.2.11";
 const port = 8080;
-const u = encodeURIComponent("admin");
-const p = encodeURIComponent("yvonneyvonne");
+const u = encodeURIComponent(private.pimatic_user);
+const p = encodeURIComponent(private.pimatic_ww);
 var socket = io("http://" + host + ":" + port + "/?username=" + u + "&password=" + p, {
   reconnection: true,
   reconnectionDelay: 1000,
