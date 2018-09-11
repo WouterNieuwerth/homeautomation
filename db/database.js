@@ -1,13 +1,14 @@
 const mongoose          = require('mongoose');
 const options           = {promiseLibrary: require('bluebird')};
 const ThermostatDevice  = require('./schemas.js').ThermostatDevice;
+const private           = require('../../private/private.js');
 var object = {};
 
 var deviceSchema = new mongoose.Schema(ThermostatDevice);
 
 function connect (callback) {
 
-  mongoose.connect('mongodb://wouternieuwerth:kDz51QuaIGj3J%265k@wouternieuwerthcluster0-shard-00-00-xq9uq.mongodb.net:27017,wouternieuwerthcluster0-shard-00-01-xq9uq.mongodb.net:27017,wouternieuwerthcluster0-shard-00-02-xq9uq.mongodb.net:27017/test?ssl=true&replicaSet=WouterNieuwerthCluster0-shard-0&authSource=admin', options);
+  mongoose.connect(private.mongoose, options);
 
   const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
