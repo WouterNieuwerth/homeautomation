@@ -1,12 +1,10 @@
-const https       = require('https');
-const getAPIKeys  = require('./thermostat.js').getAPIKeys;
-const logger      = require('../logger.js');
+const https = require('https')
+const logger = require('../logger.js')
 
 function getToken (authCode, postData, callback) {
-
   const options = {
     hostname: 'api.honeywell.com',
-    //port: 433,
+    // port: 433,
     path: '/oauth2/token',
     method: 'POST',
     headers: {
@@ -14,39 +12,38 @@ function getToken (authCode, postData, callback) {
       'Authorization': authCode,
       'Accept': 'application/json'
     }
-  };
+  }
 
   const req = https.request(options, (res) => {
-    //logger(`STATUS: ${res.statusCode}`);
-    //logger(`HEADERS: ${JSON.stringify(res.headers)}`);
-    res.setEncoding('utf8');
+    // logger(`STATUS: ${res.statusCode}`);
+    // logger(`HEADERS: ${JSON.stringify(res.headers)}`);
+    res.setEncoding('utf8')
     res.on('data', (chunk) => {
-      //logger(`BODY: ${chunk}`);
-      callback(chunk);
-    });
+      // logger(`BODY: ${chunk}`);
+      callback(chunk)
+    })
     res.on('end', () => {
-      logger('No more data in response','yellow');
-    });
-  });
+      logger('No more data in response', 'yellow')
+    })
+  })
 
   req.on('error', (e) => {
-    console.error(`Problem with request: ${e.message}`);
-  });
+    console.error(`Problem with request: ${e.message}`)
+  })
 
-  //Write data to request body
-  //req.write(postData);
-  req.end(postData);
+  // Write data to request body
+  // req.write(postData);
+  req.end(postData)
 }
 
 function refreshToken (getAPIKeys, callback) {
+  var APIKeys = getAPIKeys()
 
-  var APIKeys = getAPIKeys();
-
-  var postData = 'grant_type=refresh_token&refresh_token=' + APIKeys.Tokens.refresh_token;
+  var postData = 'grant_type=refresh_token&refresh_token=' + APIKeys.Tokens.refresh_token
 
   const options = {
     hostname: 'api.honeywell.com',
-    //port: 433,
+    // port: 433,
     path: '/oauth2/token',
     method: 'POST',
     headers: {
@@ -54,210 +51,193 @@ function refreshToken (getAPIKeys, callback) {
       'Authorization': 'Basic ' + APIKeys.Base64authorizationCode,
       'Accept': '/'
     }
-  };
+  }
 
   const req = https.request(options, (res) => {
-    res.setEncoding('utf8');
+    res.setEncoding('utf8')
     res.on('data', (chunk) => {
-      callback(undefined, chunk);
-    });
+      callback(undefined, chunk)
+    })
     res.on('end', () => {
-      logger('No more data in response','yellow');
-    });
-  });
+      logger('No more data in response', 'yellow')
+    })
+  })
 
   req.on('error', (e) => {
-    console.error(`Problem with request: ${e.message}`);
-    callback(e,undefined);
-  });
+    console.error(`Problem with request: ${e.message}`)
+    callback(e, undefined)
+  })
 
-  //Write data to request body
-  //req.write(postData);
-  req.end(postData);
+  // Write data to request body
+  // req.write(postData);
+  req.end(postData)
 }
 
-function getLocations(getAPIKeys, callback) {
+function getLocations (getAPIKeys, callback) {
+  var APIKeys = getAPIKeys()
 
-  var APIKeys = getAPIKeys();
-
-  logger(`ACCESS TOKEN getLocations: ${APIKeys.Tokens.access_token}`,'yellow');
+  logger(`ACCESS TOKEN getLocations: ${APIKeys.Tokens.access_token}`, 'yellow')
 
   const options = {
     hostname: 'api.honeywell.com',
-    //port: 433,
+    // port: 433,
     path: '/v2/locations?apikey=' + APIKeys.apiKey,
     method: 'GET',
     headers: {
-      //'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + APIKeys.Tokens.access_token,
       'Accept': '/'
     }
-  };
+  }
 
   const req = https.request(options, (res) => {
-    //logger(`STATUS: ${res.statusCode}`);
-    //logger(`HEADERS: ${JSON.stringify(res.headers)}`);
-    res.setEncoding('utf8');
+    // logger(`STATUS: ${res.statusCode}`);
+    // logger(`HEADERS: ${JSON.stringify(res.headers)}`);
+    res.setEncoding('utf8')
     res.on('data', (chunk) => {
-      //logger(`BODY: ${chunk}`);
-      callback(chunk);
-    });
+      // logger(`BODY: ${chunk}`);
+      callback(chunk)
+    })
     res.on('end', () => {
-      logger('No more data in response','yellow');
-    });
-  });
+      logger('No more data in response', 'yellow')
+    })
+  })
 
   req.on('error', (e) => {
-    console.error(`Problem with request: ${e.message}`);
-  });
+    console.error(`Problem with request: ${e.message}`)
+  })
 
-  req.end();
+  req.end()
 }
 
-function getDevice(getAPIKeys, callback) {
+function getDevice (getAPIKeys, callback) {
+  var APIKeys = getAPIKeys()
 
-  var APIKeys = getAPIKeys();
-
-  logger(`ACCESS TOKEN getDevice: ${APIKeys.Tokens.access_token}`,'yellow');
+  logger(`ACCESS TOKEN getDevice: ${APIKeys.Tokens.access_token}`, 'yellow')
 
   const options = {
     hostname: 'api.honeywell.com',
-    //port: 433,
-    path: '/v2/devices/thermostats/' + APIKeys.DeviceId +'?apikey=' + APIKeys.apiKey + '&locationId=' + APIKeys.LocationId,
+    // port: 433,
+    path: '/v2/devices/thermostats/' + APIKeys.DeviceId + '?apikey=' + APIKeys.apiKey + '&locationId=' + APIKeys.LocationId,
     method: 'GET',
     headers: {
-      //'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + APIKeys.Tokens.access_token,
       'Accept': '/'
     }
-  };
+  }
 
   const req = https.request(options, (res) => {
-    //logger(`STATUS: ${res.statusCode}`);
-    //logger(`HEADERS: ${JSON.stringify(res.headers)}`);
-    res.setEncoding('utf8');
+    // logger(`STATUS: ${res.statusCode}`);
+    // logger(`HEADERS: ${JSON.stringify(res.headers)}`);
+    res.setEncoding('utf8')
     res.on('data', (chunk) => {
-      //logger(`BODY: ${chunk}`);
-      callback(chunk);
-    });
+      // logger(`BODY: ${chunk}`);
+      callback(chunk)
+    })
     res.on('end', () => {
-      logger('No more data in response','yellow');
-    });
-  });
+      logger('No more data in response', 'yellow')
+    })
+  })
 
   req.on('error', (e) => {
-    console.error(`Problem with request: ${e.message}`);
-  });
+    console.error(`Problem with request: ${e.message}`)
+  })
 
-  req.end();
+  req.end()
 }
 
-function setTemperature (getAPIKeys, post_data, callback) {
+function setTemperature (getAPIKeys, postData, callback) {
+  var APIKeys = getAPIKeys()
 
-  var APIKeys = getAPIKeys();
-
-  if (APIKeys.Tokens == undefined) {
-    callback("No tokens, you need to log in to the thermostat first.");
-    return;
+  if (APIKeys.Tokens === undefined) {
+    callback('No tokens, you need to log in to the thermostat first.')
+    return
   }
 
   const options = {
     hostname: 'api.honeywell.com',
-    //port: 433,
+    // port: 433,
     path: '/v2/devices/thermostats/' + APIKeys.DeviceId + '?apikey=' + APIKeys.apiKey + '&locationId=' + APIKeys.LocationId,
     method: 'POST',
     headers: {
-      //'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + APIKeys.Tokens.access_token,
       'Accept': '/',
       'Content-Type': 'application/json'
     }
-  };
+  }
 
   const req = https.request(options, (res) => {
-    //logger(`STATUS: ${res.statusCode}`);
-    //logger(`HEADERS: ${JSON.stringify(res.headers)}`);
-    res.setEncoding('utf8');
+    // logger(`STATUS: ${res.statusCode}`);
+    // logger(`HEADERS: ${JSON.stringify(res.headers)}`);
+    res.setEncoding('utf8')
     res.on('data', (chunk) => {
-      //logger(`BODY: ${chunk}`);
-      callback(chunk);
-    });
+      // logger(`BODY: ${chunk}`);
+      callback(chunk)
+    })
     res.on('end', () => {
-      logger('No more data in response','yellow');
-      callback("Callback uitgevoerd...");
-    });
-  });
+      logger('No more data in response', 'yellow')
+      callback('Callback uitgevoerd...')
+    })
+  })
 
   req.on('error', (e) => {
-    console.error(`Problem with request: ${e.message}`);
-  });
+    console.error(`Problem with request: ${e.message}`)
+  })
 
-  //Write data to request body
-  //req.write(postData);
-  req.end(post_data);
+  // Write data to request body
+  // req.write(postData);
+  req.end(postData)
 }
 
-function setTemp(temp, getAPIKeys) {
-
-  var APIKeys = getAPIKeys();
-
+function setTemp (temp, getAPIKeys) {
   var postData = JSON.stringify({
-    "mode": "Heat",
-    "heatSetpoint": temp,
-    "coolSetpoint": 22,
-    "thermostatSetpointStatus": "TemporaryHold"
-  });
+    'mode': 'Heat',
+    'heatSetpoint': temp,
+    'coolSetpoint': 22,
+    'thermostatSetpointStatus': 'TemporaryHold'
+  })
   setTemperature(getAPIKeys, postData, function (result) {
-    logger(`RESULT: ${JSON.stringify(result)}`,'yellow');
-  });
+    logger(`RESULT: ${JSON.stringify(result)}`, 'yellow')
+  })
 }
 
-function returnToSchedule(getAPIKeys) {
-
-  var APIKeys = getAPIKeys();
-
+function returnToSchedule (getAPIKeys) {
   var postData = JSON.stringify({
-    "mode": "Heat",
-    "heatSetpoint": 16.5,
-    "coolSetpoint": 22,
-    "thermostatSetpointStatus": "NoHold"
-  });
+    'mode': 'Heat',
+    'heatSetpoint': 16.5,
+    'coolSetpoint': 22,
+    'thermostatSetpointStatus': 'NoHold'
+  })
   setTemperature(getAPIKeys, postData, function (result) {
-    logger(`RESULT: ${JSON.stringify(result)}`,'yellow');
-  });
+    logger(`RESULT: ${JSON.stringify(result)}`, 'yellow')
+  })
 }
 
-function getThermostat(getAPIKeys,callback) {
-
-  var APIKeys = getAPIKeys();
-
-  getDevice(getAPIKeys, function(result) {
-    logger(`RESULT getThermostat: ${result}`,'yellow');
-    callback(result);
+function getThermostat (getAPIKeys, callback) {
+  getDevice(getAPIKeys, function (result) {
+    logger(`RESULT getThermostat: ${result}`, 'yellow')
+    callback(result)
   })
 }
 
 function notifyThermostatOffline () {
-
   https.get('https://maker.ifttt.com/trigger/thermostat_offline/with/key/geSO7F_NG7xhlCEc_kzmO4PWBJebB75rZ2s1aNEK9jf', (res) => {
-    logger(`statusCode: ${res.statusCode}`,'green');
-    logger(`headers:' ${res.headers}`,'green');
+    logger(`statusCode: ${res.statusCode}`, 'green')
+    logger(`headers:' ${res.headers}`, 'green')
 
     res.on('data', (d) => {
-      logger(d,'green');
-    });
-
-    res.on('end', () => {
-      logger('Alle data ontvangen en get-request succesvol uitgevoerd.','green');
+      logger(d, 'green')
     })
 
+    res.on('end', () => {
+      logger('Alle data ontvangen en get-request succesvol uitgevoerd.', 'green')
+    })
   }).on('error', (e) => {
-    console.error(e);
-  });
-
+    console.error(e)
+  })
 }
-
-
 
 module.exports = {
   getToken: getToken,
@@ -269,4 +249,4 @@ module.exports = {
   returnToSchedule: returnToSchedule,
   getThermostat: getThermostat,
   notifyThermostatOffline: notifyThermostatOffline
-};
+}

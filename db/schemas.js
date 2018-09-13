@@ -68,7 +68,7 @@ var ThermostatDevice = {
   },
   deviceSettings: {},
   userDefinedDeviceName: String,
-  timestamp: {type: Date, default: Date.now}
+  timestamp: { type: Date, default: Date.now }
 }
 
 module.exports = {
