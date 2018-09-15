@@ -16,16 +16,22 @@ html
           table
             tr
               td Temperatuur binnen:
-              td Temperatuur buiten:
+              td Instelling thermostaat
             tr
               td(class='temperatuur')= thermostat.indoorTemperature
-              td(class='temperatuur')= thermostat.outdoorTemperature
-            tr
-              td Luchtvochtigheid:
-              td Instelling thermostaat:
-            tr
-              td(class='temperatuur')= thermostat.displayedOutdoorHumidity
               td(class='temperatuur')= thermostat.changeableValues.heatSetpoint
+            tr
+              td Temperatuur buiten:
+              td Luchtvochtigheid:
+            tr
+              td(class='temperatuur')= thermostat.outdoorTemperature
+              td(class='temperatuur')= thermostat.displayedOutdoorHumidity
+            tr
+              td Temperatuur API:
+              td Luchtvochtigheid API:
+            tr
+              td(class='temperatuur')= currentWeather.main.temp
+              td(class='temperatuur')= currentWeather.main.humidity
       p
         | Pas hieronder de instellingen van de thermostaat aan:
       p
@@ -71,11 +77,11 @@ html
             td(colspan="2")
               a(class='btn' id='reset_thermostat' href='/api/returntoschedule') Volg programma
       p
-        a(class='btn' id='graphs' href='/thermostat/thermostatgraphs') Grafieken
-      p
         a(class='btn' id='home' href='/') Home
       p
         a(class='link' id='flush' href='/thermostat/flush') Uitloggen
+      p
+        a(class='link' id='graphs' href='/thermostat/thermostatgraphs') Grafieken
     else
       p
         | We zijn nog niet ingelogd op de thermostaat. Daarom moet je eerst

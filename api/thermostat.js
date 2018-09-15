@@ -14,6 +14,7 @@ const notifyThermostatOffline = require('./thermostatRequests').notifyThermostat
 const db = require('../db/database.js')
 const logger = require('../logger.js')
 const privateStuff = require('../../private/private.js')
+const weather = require('./weather.js')
 
 var apiKey, secret, redirectUri
 var authorizationCode, url
@@ -46,10 +47,14 @@ var Tokens
 var Locations, LocationId, DeviceId, ThermostatDevice // 559728, LCC-00D02DEBB14D
 
 router.get('/', function (req, res) {
-  res.render('thermostat', {
-    title: 'Thermostaat',
-    locations: Locations,
-    thermostat: ThermostatDevice
+  weather.current(function (err, currentWeather) {
+    if (err) throw err
+    res.render('thermostat', {
+      title: 'Thermostaat',
+      locations: Locations,
+      thermostat: ThermostatDevice,
+      currentWeather: currentWeather
+    })
   })
 })
 
