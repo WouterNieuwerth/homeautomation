@@ -151,7 +151,7 @@ function setTemperature (getAPIKeys, postData, callback) {
   var APIKeys = getAPIKeys()
 
   if (APIKeys.Tokens === undefined) {
-    callback('No tokens, you need to log in to the thermostat first.')
+    logger('No tokens, you need to log in to the thermostat first.', 'red')
     return
   }
 
@@ -178,7 +178,8 @@ function setTemperature (getAPIKeys, postData, callback) {
     })
     res.on('end', () => {
       logger('No more data in response', 'yellow')
-      callback('Callback uitgevoerd...')
+      var resultaat = 'Callback uitgevoerd...'
+      callback(resultaat)
     })
   })
 

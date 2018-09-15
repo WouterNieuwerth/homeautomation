@@ -37,6 +37,7 @@ function notify (message, dialect) {
       var client = new Client()
       client.connect(address, function () {
         client.launch(DefaultMediaReceiver, function (err, player) {
+          if (err) throw err
           var media = {
             contentId: url,
             contentType: 'audio/mp3',
@@ -45,6 +46,7 @@ function notify (message, dialect) {
           player.load(media, {
             autoplay: true
           }, function (err, status) {
+            if (err) throw err
             player.on('status', function (status) {
               if (status.playerState === 'IDLE') {
                 player.stop()

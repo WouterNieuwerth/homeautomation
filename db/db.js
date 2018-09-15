@@ -11,6 +11,7 @@ db.connect(function (database) {
     logger(`Database: Device added --> ${Device}`,'green');
   }); */
   database.Device.count(function (err, count) {
+    if (err) throw err
     logger(`COUNT: ${count}`, 'green')
   })
 

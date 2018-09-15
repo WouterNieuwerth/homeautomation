@@ -22,6 +22,7 @@ publicIp.v4().then(ip => {
   logger(`Public IP address: ${ip}`, 'green')
 
   address(function (err, addrs) {
+    if (err) throw err
     if (addrs.ip === '192.168.2.18') {
       // DEV
       apiKey = privateStuff.honeywell_apiKey_test

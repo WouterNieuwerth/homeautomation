@@ -1,24 +1,22 @@
-const express             = require("express");
-const app                 = express();
-const address             = require('address');
-const _                   = require('lodash');
-const body                = require('body/form');
-const logger              = require('./logger.js');
-const timer               = require('./timer.js');
-const contactsensors      = require('./contactsensors.js');
-const notify              = require('./home-notifier.js').notify;
-const discoverChromecasts = require('./home-notifier.js').discover;
-const goodmorning         = require('./greeter.js').goodmorning;
-const pimatic_api         = require("./api/pimatic_api.js");
-const thermostat          = require('./api/thermostat.js').router;
-const setTemp             = require('./api/thermostatRequests.js').setTemp;
-const returnToSchedule    = require('./api/thermostatRequests.js').returnToSchedule;
-const getAPIKeys          = require('./api/thermostat.js').getAPIKeys;
+const express = require('express')
+const app = express()
+const address = require('address')
+const body = require('body/form')
+const path = require('path')
+const logger = require('./logger.js')
+const timer = require('./timer.js')
+const contactsensors = require('./contactsensors.js')
+const notify = require('./home-notifier.js').notify
+const discoverChromecasts = require('./home-notifier.js').discover
+const goodmorning = require('./greeter.js').goodmorning
+const pimaticApi = require('./api/pimatic_api.js')
+const thermostat = require('./api/thermostat.js').router
+const setTemp = require('./api/thermostatRequests.js').setTemp
+const returnToSchedule = require('./api/thermostatRequests.js').returnToSchedule
+const getAPIKeys = require('./api/thermostat.js').getAPIKeys
 
-//Paar algemene variabelen:
-const socket = pimatic_api.socket;
-const dialects = ["en-AU","en-CA","en-GH","en-GB","en-IN","en-IE","en-KE","en-NZ","en-NG","en-PH","en-ZA","en-TZ","en-US"];
-var startPage = "/"
+// Paar algemene variabelen:
+var startPage = '/'
 
 /*
  * Schema voor het in- en uitschakelen van de boiler.
@@ -35,381 +33,382 @@ var startPage = "/"
  */
 var boilerSchemas = {
   on: [
-    {dayOfWeek: 1, hour: 06, minute: 30},
-    {dayOfWeek: 1, hour: 17, minute: 00},
-    {dayOfWeek: 2, hour: 06, minute: 30},
-    {dayOfWeek: 2, hour: 17, minute: 00},
-    {dayOfWeek: 3, hour: 06, minute: 30},
-    {dayOfWeek: 3, hour: 17, minute: 00},
-    {dayOfWeek: 4, hour: 06, minute: 30},
-    {dayOfWeek: 4, hour: 17, minute: 00},
-    {dayOfWeek: 5, hour: 06, minute: 30},
-    {dayOfWeek: 6, hour: 08, minute: 00},
-    {dayOfWeek: 7, hour: 08, minute: 00}
+    { dayOfWeek: 1, hour: 6, minute: 30 },
+    { dayOfWeek: 1, hour: 17, minute: 0 },
+    { dayOfWeek: 2, hour: 6, minute: 30 },
+    { dayOfWeek: 2, hour: 17, minute: 0 },
+    { dayOfWeek: 3, hour: 6, minute: 30 },
+    { dayOfWeek: 3, hour: 17, minute: 0 },
+    { dayOfWeek: 4, hour: 6, minute: 30 },
+    { dayOfWeek: 4, hour: 17, minute: 0 },
+    { dayOfWeek: 5, hour: 6, minute: 30 },
+    { dayOfWeek: 6, hour: 8, minute: 0 },
+    { dayOfWeek: 7, hour: 8, minute: 0 }
   ],
   off: [
-    {dayOfWeek: 1, hour: 08, minute: 00},
-    {dayOfWeek: 1, hour: 23, minute: 00},
-    {dayOfWeek: 2, hour: 08, minute: 00},
-    {dayOfWeek: 2, hour: 23, minute: 00},
-    {dayOfWeek: 3, hour: 08, minute: 00},
-    {dayOfWeek: 3, hour: 23, minute: 00},
-    {dayOfWeek: 4, hour: 08, minute: 00},
-    {dayOfWeek: 4, hour: 23, minute: 00},
-    {dayOfWeek: 5, hour: 23, minute: 00},
-    {dayOfWeek: 6, hour: 23, minute: 00},
-    {dayOfWeek: 7, hour: 23, minute: 00}
+    { dayOfWeek: 1, hour: 8, minute: 0 },
+    { dayOfWeek: 1, hour: 23, minute: 0 },
+    { dayOfWeek: 2, hour: 8, minute: 0 },
+    { dayOfWeek: 2, hour: 23, minute: 0 },
+    { dayOfWeek: 3, hour: 8, minute: 0 },
+    { dayOfWeek: 3, hour: 23, minute: 0 },
+    { dayOfWeek: 4, hour: 8, minute: 0 },
+    { dayOfWeek: 4, hour: 23, minute: 0 },
+    { dayOfWeek: 5, hour: 23, minute: 0 },
+    { dayOfWeek: 6, hour: 23, minute: 0 },
+    { dayOfWeek: 7, hour: 23, minute: 0 }
   ]
-};
+}
 
-//Bij het starten van deze app moeten ook een paar andere
-//functies worden uitgevoerd.
+// Bij het starten van deze app moeten ook een paar andere
+// functies worden uitgevoerd.
 
-//Schakel de timer in die de boiler in- en uitschakelt.
-timer.boilerTimer(boilerSchemas);
+// Schakel de timer in die de boiler in- en uitschakelt.
+timer.boilerTimer(boilerSchemas)
 
-//Zorg ervoor dat de Google Home bekend is voor de notifier
-discoverChromecasts();
+// Zorg ervoor dat de Google Home bekend is voor de notifier
+discoverChromecasts()
 
-//Maak de contactsensors op de deuren actief,
-//maar alleen als we niet aan het testen zijn.
-//Zo sturen we geen dubbele hits naar Analytics.
+// Maak de contactsensors op de deuren actief,
+// maar alleen als we niet aan het testen zijn.
+// Zo sturen we geen dubbele hits naar Analytics.
 address(function (err, addrs) {
-  if (addrs.ip == '192.168.2.18') {
-    logger('Testomgeving live, geen contactsensors activeren...','yellow');
-  } else if(addrs.ip == '192.168.2.11') {
-    //Activeer de contactsensors:
-    contactsensors.contactsensors();
+  if (err) throw err
+  if (addrs.ip === '192.168.2.18') {
+    logger('Testomgeving live, geen contactsensors activeren...', 'yellow')
+  } else if (addrs.ip === '192.168.2.11') {
+    // Activeer de contactsensors:
+    contactsensors.contactsensors()
   } else {
-    logger('Interne IP-adressen zijn gewijzigd!', 'red');
+    logger('Interne IP-adressen zijn gewijzigd!', 'red')
   }
-});
+})
 
-//Schakel de pimatic API in.
-pimatic_api.on();
+// Schakel de pimatic API in.
+pimaticApi.on()
 
-//Enkele instellingen voor Express.js
-app.set('view engine', 'pug');
-app.set('views', __dirname + '/views');
-app.use('*/static', express.static(__dirname + '/public'));
+// Enkele instellingen voor Express.js
+app.set('view engine', 'pug')
+app.set('views', path.resolve(__dirname, 'views'))
+app.use('*/static', express.static(path.resolve(__dirname, 'public')))
 
-//De pagina waar het allemaal mee begint:
+// De pagina waar het allemaal mee begint:
 app.get(startPage, function (req, res) {
   res.render('index', {
-    title: 'Home',
+    title: 'Home'
   })
-});
+})
 
-//Een switch functie dient als lookup voor de pagina die wordt opgevraagd
-//binnen /api/. Een request voor /api/ zelf levert geen pagina.
+// Een switch functie dient als lookup voor de pagina die wordt opgevraagd
+// binnen /api/. Een request voor /api/ zelf levert geen pagina.
 app.get('/api/:action', function (req, res) {
   switch (req.params.action) {
-    //IFTTT
+    // IFTTT
     case 'everything':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','toggle');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','toggle');
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','toggle');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','toggle');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','toggle');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','toggle');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','toggle');
-      //notify('Toggled everything.', _.sample(dialects));
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'toggle')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'toggle')
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'toggle')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'toggle')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'toggle')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'toggle')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'toggle')
+      // notify('Toggled everything.', _.sample(dialects));
+      break
+    // IFTTT
     case 'on-everything':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOn');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOn');
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOn');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOn');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOn');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOn');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOn');
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOn')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOn')
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'turnOn')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOn')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOn')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOn')
+      break
+    // IFTTT
     case 'off-everything':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOff');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOff');
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOff');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOff');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOff');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOff');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOff');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOff')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOff')
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'turnOff')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOff')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOff')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOff')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
+      break
+    // Web interface
     case 'everything-on':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOn');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOn');
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOn');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOn');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOn');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOn');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOn');
-      //notify('Switched everything on.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOn')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOn')
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'turnOn')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOn')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOn')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOn')
+      // notify('Switched everything on.', _.sample(dialects));
+      break
+    // Web interface
     case 'everything-off':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOff');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOff');
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOff');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOff');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOff');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOff');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOff');
-      //notify('Switched everything off.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOff')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOff')
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'turnOff')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOff')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOff')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOff')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
+      // notify('Switched everything off.', _.sample(dialects));
+      break
+    // Web interface
     case 'togglelights':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','toggle');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','toggle');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','toggle');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','toggle');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','toggle');
-      //notify('Toggled the lights.', _.sample(dialects));
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'toggle')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'toggle')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'toggle')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'toggle')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'toggle')
+      // notify('Toggled the lights.', _.sample(dialects));
+      break
+    // IFTTT
     case 'the lights':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','toggle');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','toggle');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','toggle');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','toggle');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','toggle');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','toggle');
-      //notify('Toggled the lights.', _.sample(dialects));
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'toggle')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'toggle')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'toggle')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'toggle')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'toggle')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'toggle')
+      // notify('Toggled the lights.', _.sample(dialects));
+      break
+    // IFTTT
     case 'on-the lights':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOn');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOn');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOn');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOn');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOn');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOn');
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOn')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOn')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOn')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOn')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOn')
+      break
+    // IFTTT
     case 'off-the lights':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOff');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOff');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOff');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOff');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOff');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOff');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOff')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOff')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOff')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOff')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOff')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
+      break
+    // Web interface
     case 'lights-on':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOn');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOn');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOn');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOn');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOn');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOn');
-      //notify('Switched the lights on.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOn')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOn')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOn')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOn')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOn')
+      // notify('Switched the lights on.', _.sample(dialects));
+      break
+    // Web interface
     case 'lights-off':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOff');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOff');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOff');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOff');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOff');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOff');
-      //notify('Switched the lights off.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOff')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOff')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOff')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOff')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOff')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
+      // notify('Switched the lights off.', _.sample(dialects));
+      break
+    // Web interface
     case 'toggleledlamp':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','toggle');
-      //notify('Toggled the LED light.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'toggle')
+      // notify('Toggled the LED light.', _.sample(dialects));
+      break
+    // Web interface
     case 'ledlamp-on':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOn');
-      //notify('Switched the LED light on.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOn')
+      // notify('Switched the LED light on.', _.sample(dialects));
+      break
+    // Web interface
     case 'ledlamp-off':
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOff');
-      //notify('Switched the LED light off.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOff')
+      // notify('Switched the LED light off.', _.sample(dialects));
+      break
+    // Web interface
     case 'togglevloerlamp':
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','toggle');
-      //notify('Toggled the floor light.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'toggle')
+      // notify('Toggled the floor light.', _.sample(dialects));
+      break
+    // Web interface
     case 'vloerlamp-on':
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOn');
-      //notify('Switched the floor light on.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOn')
+      // notify('Switched the floor light on.', _.sample(dialects));
+      break
+    // Web interface
     case 'vloerlamp-off':
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOff');
-      //notify('Switched the floor light off.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOff')
+      // notify('Switched the floor light off.', _.sample(dialects));
+      break
+    // Web interface
     case 'bolletjes-on':
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOn');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOn')
+      break
+    // Web interface
     case 'bolletjes-off':
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOff');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOff')
+      break
+    // Web interface
     case 'kleurtjeslamp-on':
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOn');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
+      break
+    // Web interface
     case 'kleurtjeslamp-off':
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOff');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOff')
+      break
+    // Web interface
     case 'tafel-on':
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOn');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOn')
+      break
+    // Web interface
     case 'tafel-off':
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOff');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
+      break
+    // Web interface
     case 'keuken-on':
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOn');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOn')
+      break
+    // Web interface
     case 'keuken-off':
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOff');
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOff')
+      break
+    // IFTTT
     case 'the TV':
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','toggle');
-      //notify('Toggled the TV.', _.sample(dialects));
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'toggle')
+      // notify('Toggled the TV.', _.sample(dialects));
+      break
+    // IFTTT
     case 'on-the TV':
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOn');
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'turnOn')
+      break
+    // IFTTT
     case 'off-the TV':
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOff');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'turnOff')
+      break
+    // Web interface
     case 'toggletv':
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','toggle');
-      //notify('Toggled the TV.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'toggle')
+      // notify('Toggled the TV.', _.sample(dialects));
+      break
+    // Web interface
     case 'tv-on':
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOn');
-      //notify('Switched the TV on.', _.sample(dialects));
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'turnOn')
+      // notify('Switched the TV on.', _.sample(dialects));
+      break
+    // Web interface
     case 'tv-off':
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOff');
-      //notify('Switched the TV off.', _.sample(dialects));
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'turnOff')
+      // notify('Switched the TV off.', _.sample(dialects));
+      break
+    // IFTTT
     case 'the boiler':
-      pimatic_api.callDeviceAction('boiler','boiler','toggle');
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('boiler', 'boiler', 'toggle')
+      break
+    // IFTTT
     case 'on-the boiler':
-      pimatic_api.callDeviceAction('boiler','boiler','turnOn');
-      break;
-    //IFTTT
+      pimaticApi.callDeviceAction('boiler', 'boiler', 'turnOn')
+      break
+    // IFTTT
     case 'off-the boiler':
-      pimatic_api.callDeviceAction('boiler','boiler','turnOff');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('boiler', 'boiler', 'turnOff')
+      break
+    // Web interface
     case 'boiler-on':
-      pimatic_api.callDeviceAction('boiler','boiler','turnOn');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('boiler', 'boiler', 'turnOn')
+      break
+    // Web interface
     case 'boiler-off':
-      pimatic_api.callDeviceAction('boiler','boiler','turnOff');
-      break;
-    //Web interface
+      pimaticApi.callDeviceAction('boiler', 'boiler', 'turnOff')
+      break
+    // Web interface
     case 'greet':
-      goodmorning(true);
-      break;
-    //IFTTT
+      goodmorning(true)
+      break
+    // IFTTT
     case 'goodnight':
-      pimatic_api.callDeviceAction('tv-meubel1','tv-meubel','turnOff');
-      pimatic_api.callDeviceAction('vloerlamp1','vloerlamp','turnOff');
-      pimatic_api.callDeviceAction('led-lamp1','led-lamp','turnOff');
-      pimatic_api.callDeviceAction('bolletjes','elro-1','turnOff');
-      pimatic_api.callDeviceAction('kleurtjeslamp','elro-2','turnOff');
-      pimatic_api.callDeviceAction('boiler','boiler','turnOff');
-      pimatic_api.callDeviceAction('Keuken','tradfri_131076','turnOff');
-      pimatic_api.callDeviceAction('Tafel','tradfri_131074','turnOff');
-      var APIKeys = getAPIKeys();
-      //logger(JSON.stringify(APIKeys.Locations),'red');
-      for(i=0; i<APIKeys.Locations.length; i++) {
-        if(APIKeys.Locations[i].devices[0]){
-          if (APIKeys.Locations[i].devices[0].changeableValues.heatSetpoint != 16.5) {
-            logger('Temperatuur wordt verlaagd','green');
-            setTemp(16.5, getAPIKeys);
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'turnOff')
+      pimaticApi.callDeviceAction('vloerlamp1', 'vloerlamp', 'turnOff')
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOff')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOff')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOff')
+      pimaticApi.callDeviceAction('boiler', 'boiler', 'turnOff')
+      pimaticApi.callDeviceAction('Keuken', 'tradfri_131076', 'turnOff')
+      pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
+      var APIKeys = getAPIKeys()
+      // logger(JSON.stringify(APIKeys.Locations),'red');
+      for (var i = 0; i < APIKeys.Locations.length; i++) {
+        if (APIKeys.Locations[i].devices[0]) {
+          if (APIKeys.Locations[i].devices[0].changeableValues.heatSetpoint !== 16.5) {
+            logger('Temperatuur wordt verlaagd', 'green')
+            setTemp(16.5, getAPIKeys)
           }
         }
       }
 
-      break;
-    //Web interface
+      break
+    // Web interface
     case 'returntoschedule':
-      returnToSchedule(getAPIKeys);
-      break;
+      returnToSchedule(getAPIKeys)
+      break
     default:
-      logger("Couldn't find: " + req.params.action,"red");
-
+      logger("Couldn't find: " + req.params.action, 'red')
   }
 
-  /*res.render('index', {
+  /* res.render('index', {
     title: 'Home',
-  });*/
+  }); */
 
-  res.redirect(startPage);
-});
+  res.redirect(startPage)
+})
 
 app.get('/notifier', function (req, res) {
   res.render('notifier', {
-    title: 'Notifier',
+    title: 'Notifier'
   })
-});
+})
 app.post('/notifier', function (req, res) {
-  logger("POST received...","yellow");
+  logger('POST received...', 'yellow')
 
-  body(req, res, function(err,post) {
-    if (err) logger("There was an error: " + err,"red");
-    logger(post.message,'yellow');
+  body(req, res, function (err, post) {
+    if (err) logger('There was an error: ' + err, 'red')
+    logger(post.message, 'yellow')
 
-    notify(post.message, post.dialect);
+    notify(post.message, post.dialect)
 
     res.render('notifier', {
-      title: 'Notifier',
+      title: 'Notifier'
     })
   })
-});
+})
 
-app.use('/thermostat', thermostat);
+app.use('/thermostat', thermostat)
 
 app.use(function (req, res, next) {
   res.status(404).render('404', {
     title: '404'
   })
-});
+})
 
-//Make a server.
-//Testen op poort 3456, live op poort 2345.
+// Make a server.
+// Testen op poort 3456, live op poort 2345.
 
 address(function (err, addrs) {
-  logger(`This device has the following addresses: IP: ${addrs.ip}, IPv6: ${addrs.ipv6}, MAC: ${addrs.mac}`,'blue');
+  if (err) throw err
+  logger(`This device has the following addresses: IP: ${addrs.ip}, IPv6: ${addrs.ipv6}, MAC: ${addrs.mac}`, 'blue')
 
-  var port = 3456;
-  if (addrs.ip == '192.168.2.18') {
-    port = 3456;
-  } else if(addrs.ip == '192.168.2.11') {
-    port = 2345;
+  var port = 3456
+  if (addrs.ip === '192.168.2.18') {
+    port = 3456
+  } else if (addrs.ip === '192.168.2.11') {
+    port = 2345
   } else {
-    logger('Interne IP-adressen zijn gewijzigd!', 'red');
+    logger('Interne IP-adressen zijn gewijzigd!', 'red')
   }
 
-  app.listen(port, function() {
-    logger("Listening on port " + port + "...","blue");
-  });
-});
+  app.listen(port, function () {
+    logger('Listening on port ' + port + '...', 'blue')
+  })
+})
