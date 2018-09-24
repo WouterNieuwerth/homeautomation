@@ -347,7 +347,16 @@ app.get('/api/:action', function (req, res) {
           }
         }
       }
-
+      break
+    // IFTTT
+    case 'netflix-and-chill':
+      pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOn')
+      pimaticApi.callDeviceAction('vloerlamp-scene-relax', undefined, undefined, { deviceId: 'tradfri_scene_131078', actionName: 'buttonPressed', buttonId: 'tradfri_131078_196624' })
+      pimaticApi.callDeviceAction('tv-meubel1', 'tv-meubel', 'turnOn')
+      pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'turnOn')
+      pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
+      pimaticApi.callDeviceAction('keuken-scene-relax', undefined, undefined, { deviceId: 'tradfri_scene_131076', actionName: 'buttonPressed', buttonId: 'tradfri_131076_196618' })
+      pimaticApi.callDeviceAction('tafel-scene-relax', undefined, undefined, { deviceId: 'tradfri_scene_131074', actionName: 'buttonPressed', buttonId: 'tradfri_131074_196612' })
       break
     // Web interface
     case 'returntoschedule':

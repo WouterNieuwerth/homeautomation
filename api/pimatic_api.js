@@ -57,15 +57,23 @@ function on () {
   })
 }
 
-function callDeviceAction (id, device, action) {
-  socket.emit('call', {
-    id: id,
-    action: 'callDeviceAction',
-    params: {
-      deviceId: device,
-      actionName: action
-    }
-  })
+function callDeviceAction (id, device, action, params) {
+  if (params === undefined) {
+    socket.emit('call', {
+      id: id,
+      action: 'callDeviceAction',
+      params: {
+        deviceId: device,
+        actionName: action
+      }
+    })
+  } else {
+    socket.emit('call', {
+      id: id,
+      action: 'callDeviceAction',
+      params: params
+    })
+  }
 
   socket.on(id, function (msg) {
     if (msg.id === id) {
