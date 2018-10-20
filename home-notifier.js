@@ -31,33 +31,37 @@ function discover () {
 }
 
 function notify (message, dialect) {
-  googleTTS(message, dialect, 1) // Dialecten: nl-NL, en-GB of en-US https://cloud.google.com/speech/docs/languages
-    .then(function (url) {
-      logger(url, 'yellow')
-      var client = new Client()
-      client.connect(address, function () {
-        client.launch(DefaultMediaReceiver, function (err, player) {
-          if (err) logger(err, 'red')
-          var media = {
-            contentId: url,
-            contentType: 'audio/mp3',
-            streamType: 'BUFFERED'
-          }
-          player.load(media, {
-            autoplay: true
-          }, function (err, status) {
+  try {
+    googleTTS(message, dialect, 1) // Dialecten: nl-NL, en-GB of en-US https://cloud.google.com/speech/docs/languages
+      .then(function (url) {
+        logger(url, 'yellow')
+        var client = new Client()
+        client.connect(address, function () {
+          client.launch(DefaultMediaReceiver, function (err, player) {
             if (err) logger(err, 'red')
-            player.on('status', function (status) {
-              if (status.playerState === 'IDLE') {
-                player.stop()
-                client.close()
-              // process.exit(0);
-              }
+            var media = {
+              contentId: url,
+              contentType: 'audio/mp3',
+              streamType: 'BUFFERED'
+            }
+            player.load(media, {
+              autoplay: true
+            }, function (err, status) {
+              if (err) logger(err, 'red')
+              player.on('status', function (status) {
+                if (status.playerState === 'IDLE') {
+                  player.stop()
+                  client.close()
+                // process.exit(0);
+                }
+              })
             })
           })
         })
       })
-    })
+  } catch (err) {
+    logger(`error met notify(): ${err}`, 'red')
+  }
 }
 
 module.exports = {

@@ -73,8 +73,14 @@ router.get('/code', function (req, res) {
     var postData = 'grant_type=authorization_code&code=' + req.query.code + '&redirect_uri=' + redirectUri
     getToken(authorizationCode, postData, function (tokens) {
       logger(tokens, 'yellow')
-      Tokens = JSON.parse(tokens)
-      res.redirect('/thermostat/locations')
+      try {
+        Tokens = JSON.parse(tokens)
+        res.redirect('/thermostat/locations')
+      } catch (err) {
+        logger(`ERROR: Er ging iets mis bij Honeywell. ${err}`, 'red')
+        notifyThermostatOffline()
+        res.redirect('/thermostat')
+      }
     })
   } else {
     logger('Aangekomen op /code, maar zonder code', 'red')
