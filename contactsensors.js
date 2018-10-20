@@ -26,6 +26,16 @@ function analyticsHit (attrEvent) {
 
   http.get(hit, (res) => {
     // console.log(res);
+    const { statusCode } = res
+    var error
+    if (statusCode !== 200) {
+      error = 'Request Failed.\n' +
+        `Status Code: ${statusCode}`
+    }
+    if (error) {
+      logger(error, 'red')
+      res.resume()
+    }
   })
 }
 

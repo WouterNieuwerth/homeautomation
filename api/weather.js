@@ -12,10 +12,14 @@ function current (callback) {
     if (err) {
       logger(`error: ${err}`, 'red')
     } else {
-      let weather = JSON.parse(body)
-      let message = `It's ${weather.main.temp} degrees in ${weather.name}!`
-      logger(message, 'white')
-      callback(err, weather)
+      try {
+        let weather = JSON.parse(body)
+        let message = `It's ${weather.main.temp} degrees in ${weather.name}!`
+        logger(message, 'white')
+        callback(err, weather)
+      } catch (err) {
+        logger(`error met current(): ${err}`, 'red')
+      }
     }
   })
 }
@@ -27,8 +31,12 @@ function forecast (callback) {
     if (err) {
       console.log('error:', err)
     } else {
-      let weather = JSON.parse(body)
-      callback(err, weather)
+      try {
+        let weather = JSON.parse(body)
+        callback(err, weather)
+      } catch (err) {
+        logger(`error met forecast(): ${err}`, 'red')
+      }
     }
   })
 }
