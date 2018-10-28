@@ -43,7 +43,7 @@ var boilerSchemas = {
     { dayOfWeek: 4, hour: 17, minute: 0 },
     { dayOfWeek: 5, hour: 6, minute: 30 },
     { dayOfWeek: 6, hour: 8, minute: 0 },
-    { dayOfWeek: 7, hour: 8, minute: 0 }
+    { dayOfWeek: 0, hour: 8, minute: 0 }
   ],
   off: [
     { dayOfWeek: 1, hour: 8, minute: 0 },
@@ -56,7 +56,7 @@ var boilerSchemas = {
     { dayOfWeek: 4, hour: 23, minute: 0 },
     { dayOfWeek: 5, hour: 23, minute: 0 },
     { dayOfWeek: 6, hour: 23, minute: 0 },
-    { dayOfWeek: 7, hour: 23, minute: 0 }
+    { dayOfWeek: 0, hour: 23, minute: 0 }
   ]
 }
 
