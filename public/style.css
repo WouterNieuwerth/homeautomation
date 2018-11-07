@@ -132,6 +132,16 @@ select {
   text-decoration: none;
 }
 
+.btn-small:hover {
+  background: #bdbdbd;
+  background-image: -webkit-linear-gradient(top, #bdbdbd, #575757);
+  background-image: -moz-linear-gradient(top, #bdbdbd, #575757);
+  background-image: -ms-linear-gradient(top, #bdbdbd, #575757);
+  background-image: -o-linear-gradient(top, #bdbdbd, #575757);
+  background-image: linear-gradient(to bottom, #bdbdbd, #575757);
+  text-decoration: none;
+}
+
 .temperatuur {
   font-family: sans-serif;
   font-size: 3em;
