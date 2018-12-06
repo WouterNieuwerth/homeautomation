@@ -248,19 +248,24 @@ db.connect(function (database) {
           logger(`Refreshed tokens: ${tokens}`, 'green')
           Tokens = tokens
 
-          getThermostat(keys, function (json) {
-            var object = JSON.parse(json)
-            if (object.changeableValues !== undefined && object.indoorTemperature !== undefined && object.outdoorTemperature !== undefined) {
-              database.add(object, database.Device, function (err, Device) {
-                if (err) logger(`Database: ERROR: ${err}`, 'red')
-                // logger(`Database: Device added --> ${Device}`,'green');
-                ThermostatDevice = Device
-              }) // Closing database.add
-            } else {
-              // Als we hier terechtkomen is de thermostaat niet meer ingelogd. Hier sturen we een melding van naar m'n mobiel.
-              notifyThermostatOffline()
-            }; // Closing if-else-statement
-          }) // Closing getThermostat
+          try {
+            getThermostat(keys, function (json) {
+              var object = JSON.parse(json)
+              if (object.changeableValues !== undefined && object.indoorTemperature !== undefined && object.outdoorTemperature !== undefined) {
+                database.add(object, database.Device, function (err, Device) {
+                  if (err) logger(`Database: ERROR: ${err}`, 'red')
+                  // logger(`Database: Device added --> ${Device}`,'green');
+                  ThermostatDevice = Device
+                }) // Closing database.add
+              } else {
+                // Als we hier terechtkomen is de thermostaat niet meer ingelogd. Hier sturen we een melding van naar m'n mobiel.
+                notifyThermostatOffline()
+              }; // Closing if-else-statement
+            }) // Closing getThermostat
+          } catch (err) {
+            logger(`ERROR: Er ging iets mis bij Honeywell. ${err}`, 'red')
+            notifyThermostatOffline()
+          }
         } // Closing else
       }) // Closing refreshToken
     }
