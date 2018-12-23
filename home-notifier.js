@@ -36,7 +36,8 @@ function notify (message, dialect) {
       .then(function (url) {
         logger(url, 'yellow')
         var client = new Client()
-        client.connect(address, function () {
+        client.connect(address, function (err) {
+          if (err) logger(`error met notify(): ${err}`, 'red')
           client.launch(DefaultMediaReceiver, function (err, player) {
             if (err) logger(err, 'red')
             var media = {
