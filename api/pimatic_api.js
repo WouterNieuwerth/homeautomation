@@ -2,7 +2,7 @@ const io = require('socket.io-client')
 const logger = require('../logger.js')
 const privateStuff = require('../../private/private.js')
 
-const host = '192.168.2.11'
+const host = '192.168.2.13'
 const port = 8080
 const u = encodeURIComponent(privateStuff.pimatic_user)
 const p = encodeURIComponent(privateStuff.pimatic_ww)

@@ -76,7 +76,7 @@ address(function (err, addrs) {
   if (err) throw err
   if (addrs.ip === '192.168.2.18') {
     logger('Testomgeving live, geen contactsensors activeren...', 'yellow')
-  } else if (addrs.ip === '192.168.2.11') {
+  } else if (addrs.ip === '192.168.2.13') {
     // Activeer de contactsensors:
     contactsensors.contactsensors()
   } else {
@@ -411,7 +411,7 @@ address(function (err, addrs) {
   var port = 3456
   if (addrs.ip === '192.168.2.18') {
     port = 3456
-  } else if (addrs.ip === '192.168.2.11') {
+  } else if (addrs.ip === '192.168.2.13') {
     port = 2345
   } else {
     logger('Interne IP-adressen zijn gewijzigd!', 'red')
