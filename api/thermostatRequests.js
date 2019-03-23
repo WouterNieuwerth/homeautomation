@@ -133,7 +133,13 @@ function getDevice (getAPIKeys, callback) {
     res.setEncoding('utf8')
     res.on('data', (chunk) => {
       // logger(`BODY: ${chunk}`);
-      callback(chunk)
+      try {
+        callback(chunk)
+      }
+      catch (error) {
+        logger(`ERROR: Er ging iets mis met de callback in getDevice. ${error}`, 'red')
+        notifyThermostatOffline()
+      }
     })
     res.on('end', () => {
       logger('No more data in response', 'yellow')
@@ -217,10 +223,16 @@ function returnToSchedule (getAPIKeys) {
 }
 
 function getThermostat (getAPIKeys, callback) {
-  getDevice(getAPIKeys, function (result) {
-    logger(`RESULT getThermostat: ${result}`, 'yellow')
-    callback(result)
-  })
+  try {
+    getDevice(getAPIKeys, function (result) {
+      logger(`RESULT getThermostat: ${result}`, 'yellow')
+      callback(result)
+    })
+  }
+  catch (error) {
+    logger(`ERROR: Er ging iets mis met getDevice. ${error}`, 'red')
+    notifyThermostatOffline()
+  }
 }
 
 function notifyThermostatOffline () {
