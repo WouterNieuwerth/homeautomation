@@ -6,7 +6,7 @@ const logger = require('./logger.js')
 
 // Het IP-adres van de Google Home.
 // 2aea44fd-db4e-f1ea-85be-dc72b2dc594b.local is de Home.
-var address = '192.168.2.5'
+var address = '192.168.2.2'
 
 // Toont alle gevonden chromecasts in het netwerk.
 // To do: address vullen met output van deze functie als input voor notify().

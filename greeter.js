@@ -77,8 +77,12 @@ function goodmorning (testMode) {
           'Congratulations! According to my sensors, you\'re the first to reach the living room today! You could say that you\'re already in a winning mood.'
         ]
         const dialects = ['en-AU', 'en-CA', 'en-GH', 'en-GB', 'en-IN', 'en-IE', 'en-KE', 'en-NZ', 'en-NG', 'en-PH', 'en-ZA', 'en-TZ', 'en-US']
-        notify(_.sample(greets), _.sample(dialects))
-        counter++
+        try {
+          notify(_.sample(greets), _.sample(dialects))
+          counter++
+        } catch (error) {
+          logger(`ERROR: Er ging iets mis met de Good Morning Greet in greeter.js. ${err}`, 'red')
+        }
         // return counter;
       } else {
         logger('Counter is niet 0, dus geen goedemorgen nodig', 'yellow')
