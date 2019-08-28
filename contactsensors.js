@@ -9,8 +9,12 @@ function contactsensors () {
   socket.on('deviceAttributeChanged', function (attrEvent) {
     if (attrEvent.attributeName === 'contact') {
       logger('===============================', 'blue')
-      analyticsHit(attrEvent)
-      goodmorning(false)
+      try {
+        analyticsHit(attrEvent)
+        goodmorning(false)
+      } catch (error) {
+        logger(`ERROR: Er ging iets mis met het versturen van de Analytics hit in contactsensor.js. ${err}`, 'red')
+      }
     }
   })
 }
