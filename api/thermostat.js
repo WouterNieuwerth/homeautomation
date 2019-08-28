@@ -217,7 +217,11 @@ function getAPIKeys () {
   if (typeof Tokens === 'object') {
     newTokens = Tokens
   } else if (typeof Tokens === 'string') {
-    newTokens = JSON.parse(Tokens)
+    try {
+      newTokens = JSON.parse(Tokens)
+    } catch (error) {
+      logger(`ERROR: Er ging iets mis met JSON.parse(). ${err}`, 'red')
+    }
   } else {
     logger('GEEN STRING OF OBJECT', 'red')
   }
