@@ -225,8 +225,17 @@ function returnToSchedule (getAPIKeys) {
 function getThermostat (getAPIKeys, callback) {
   try {
     getDevice(getAPIKeys, function (result) {
-      logger(`RESULT getThermostat: ${result}`, 'yellow')
-      callback(result)
+      try {
+        var resultToLog = JSON.parse(result)
+        if (resultsToLog.indoorTemperature) {
+          logger(`RESULT getThermostat: ${resultToLog.indoorTemperature}`, 'yellow')
+        }
+        callback(result)
+      }
+      catch (error) {
+        logger(`RESULT getThermostat: ${result}`, 'yellow')
+        logger(`ERROR: Er ging iets mis met getDevice. ${error}`, 'red')
+      }
     })
   }
   catch (error) {
