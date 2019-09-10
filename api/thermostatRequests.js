@@ -225,7 +225,7 @@ function returnToSchedule (getAPIKeys) {
 function getThermostat (getAPIKeys, callback) {
   try {
     getDevice(getAPIKeys, function (result) {
-      logger(`RESULT getThermostat: ${result}`, 'yellow')
+      logger(`RESULT getThermostat: ${result.indoorTemperature}`, 'yellow')
       callback(result)
     })
   }
