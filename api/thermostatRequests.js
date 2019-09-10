@@ -227,7 +227,7 @@ function getThermostat (getAPIKeys, callback) {
     getDevice(getAPIKeys, function (result) {
       try {
         var resultToLog = JSON.parse(result)
-        if (resultsToLog.indoorTemperature) {
+        if (resultToLog.indoorTemperature) {
           logger(`RESULT getThermostat: ${resultToLog.indoorTemperature}`, 'yellow')
         }
         callback(result)
