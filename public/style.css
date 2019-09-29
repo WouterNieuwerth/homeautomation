@@ -79,7 +79,7 @@ select {
 }
 
 .leftside, .rightside {
-  height:50vh;
+  height:100vh;
   width:100%;
 }
 
