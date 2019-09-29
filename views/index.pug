@@ -2,78 +2,85 @@ doctype html
 html
   head
     include tagmanagertop.js
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm' crossorigin='anonymous')
     link(rel='stylesheet' href='static/style.css')
     meta(name='viewport', content='width=device-width initial-scale=1.0')
     title= title
   body
     include tagmanagerbottom.js
-    h1 Afstandsbediening
-    p
-      table
-        tr
-          td
-            a(class='btn' id='alles-aan' href='/api/everything-on') Alles aan
-        tr
-          td
-            a(class='btn' id='alles-uit' href='/api/everything-off') Alles uit
-        tr
-          td
-            a(class='btn' id='alle-lampen-aan' href='/api/lights-on') Alle lampen aan
-        tr
-          td
-            a(class='btn' id='alle-lampen-uit' href='/api/lights-off') Alle lampen uit
-        tr
-          td
-            a(class='btn' id='goodnight' href='/api/goodnight') Nachtstand
-    p
-      table
-        tr
-          td
-            a(class='btn-small' id='tv' href='/api/tv-on') TV aan
-          td
-            a(class='btn-small' id='tv' href='/api/tv-off') TV uit
-        tr
-          td
-            a(class='btn-small' id='vloerlamp' href='/api/vloerlamp-on') Vloerlamp aan
-          td
-            a(class='btn-small' id='vloerlamp' href='/api/vloerlamp-off') Vloerlamp uit
-        tr
-          td
-            a(class='btn-small' id='led-lamp' href='/api/ledlamp-on') LED-lamp aan
-          td
-            a(class='btn-small' id='led-lamp' href='/api/ledlamp-off') LED-lamp uit
-        tr
-          td
-            a(class='btn-small' id='bolletjes' href='/api/bolletjes-on') Bolletjes aan
-          td
-            a(class='btn-small' id='bolletjes' href='/api/bolletjes-off') Bolletjes uit
-        tr
-          td
-            a(class='btn-small' id='kleurtjeslamp' href='/api/kleurtjeslamp-on') Kleurtjeslamp aan
-          td
-            a(class='btn-small' id='kleurtjeslamp' href='/api/kleurtjeslamp-off') Kleurtjeslamp uit
-        tr
-          td
-            a(class='btn-small' id='tafel' href='/api/tafel-on') Tafel aan
-          td
-            a(class='btn-small' id='tafel' href='/api/tafel-off') Tafel uit
-        tr
-          td
-            a(class='btn-small' id='keuken' href='/api/keuken-on') Keuken aan
-          td
-            a(class='btn-small' id='keuken' href='/api/keuken-off') Keuken uit
-    p
-      table
-        tr
-          td
-            a(class='btn-small' id='elro-1' href='/api/boiler-on') Boiler aan
-          td
-            a(class='btn-small' id='elro-1' href='/api/boiler-off') Boiler uit
-    p
-      table
-        tr
-          td
-            a(class='btn' id='notifier' href='/notifier') Home Notifier
-        tr
-          td
-            a(class='btn' id='Thermostaat' href='/thermostat') Thermostaat
+    div(class='row')
+      div(class='col-md-6 no-gutters')
+        div(class='leftside')
+          h1 Afstandsbediening
+          p
+            table
+              tr
+                td
+                  a(class='btn' id='alles-aan' href='/api/everything-on') Alles aan
+              tr
+                td
+                  a(class='btn' id='alles-uit' href='/api/everything-off') Alles uit
+              tr
+                td
+                  a(class='btn' id='alle-lampen-aan' href='/api/lights-on') Alle lampen aan
+              tr
+                td
+                  a(class='btn' id='alle-lampen-uit' href='/api/lights-off') Alle lampen uit
+              tr
+                td
+                  a(class='btn' id='goodnight' href='/api/goodnight') Nachtstand
+          p
+            table
+              tr
+                td
+                  a(class='btn-small' id='tv-on' href='/api/tv-on') TV aan
+                td
+                  a(class='btn-small' id='tv-off' href='/api/tv-off') TV uit
+              tr
+                td
+                  a(class='btn-small' id='vloerlamp-on' href='/api/vloerlamp-on') Vloerlamp aan
+                td
+                  a(class='btn-small' id='vloerlamp-off' href='/api/vloerlamp-off') Vloerlamp uit
+              tr
+                td
+                  a(class='btn-small' id='led-lamp-on' href='/api/ledlamp-on') LED-lamp aan
+                td
+                  a(class='btn-small' id='led-lamp-off' href='/api/ledlamp-off') LED-lamp uit
+              tr
+                td
+                  a(class='btn-small' id='bolletjes-on' href='/api/bolletjes-on') Bolletjes aan
+                td
+                  a(class='btn-small' id='bolletjes-off' href='/api/bolletjes-off') Bolletjes uit
+              tr
+                td
+                  a(class='btn-small' id='kleurtjeslamp-on' href='/api/kleurtjeslamp-on') Kleurtjeslamp aan
+                td
+                  a(class='btn-small' id='kleurtjeslamp-off' href='/api/kleurtjeslamp-off') Kleurtjeslamp uit
+              tr
+                td
+                  a(class='btn-small' id='tafel-on' href='/api/tafel-on') Tafel aan
+                td
+                  a(class='btn-small' id='tafel-off' href='/api/tafel-off') Tafel uit
+              tr
+                td
+                  a(class='btn-small' id='keuken-on' href='/api/keuken-on') Keuken aan
+                td
+                  a(class='btn-small' id='keuken-off' href='/api/keuken-off') Keuken uit
+          p
+            table
+              tr
+                td
+                  a(class='btn-small' id='boiler-on' href='/api/boiler-on') Boiler aan
+                td
+                  a(class='btn-small' id='boiler-off' href='/api/boiler-off') Boiler uit
+          p
+            table
+              tr
+                td
+                  a(class='btn' id='notifier' href='/notifier') Home Notifier
+              tr
+                td
+                  a(class='btn' id='Thermostaat' href='/thermostat') Thermostaat
+      div(class='col-md-6 no-gutters')
+        div(class='rightside')
+          h1 test 123
