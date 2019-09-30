@@ -83,9 +83,9 @@ select {
   width:100%;
 }
 
-@media screen and (min-width:768px) {
+@media screen and (min-width:0px) {
   .leftside, .rightside {
-    height: 100vh;
+    height: 100%;
   }
 }
 
