@@ -98,6 +98,24 @@ app.get(startPage, function (req, res) {
     title: 'Home'
   })
 })
+app.post(startPage, function (req, res) {
+  logger('POST received...', 'yellow')
+
+  body(req, res, function (err, post) {
+    if (err) logger('There was an error: ' + err, 'red')
+    logger(post.username, 'yellow')
+    logger(post.wachtwoord, 'yellow')
+
+    res.render('index', {
+      title: 'Home',
+      credentials: {
+        user: post.username,
+        pass: post.wachtwoord
+      }
+    })
+  })
+})
+
 
 // Een switch functie dient als lookup voor de pagina die wordt opgevraagd
 // binnen /api/. Een request voor /api/ zelf levert geen pagina.
