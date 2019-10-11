@@ -84,11 +84,9 @@ html
       div(class='col-md-6 no-gutters')
         div(class='rightside')
           if credentials
-            script(src='/socket.io/socket.io.js')
-            script var user= credentials.user
-            script var pass= credentials.pass
+            script(src='https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js')
             script.
-              var socket = io('http://192.168.2.13:8080/?username=' + user + '&password=' + pass, {
+              var socket = io('http://192.168.2.13:8080/?username=#{credentials.user}&password=#{credentials.pass}', {
                 reconnection: true,
                 reconnectionDelay: 1000,
                 reconnectionDelayMax: 3000,
@@ -98,12 +96,45 @@ html
               socket.on('connect', function(){});
               socket.on('event', function(data){});
               socket.on('deviceAttributeChanged', function (msg){
-                console.log(msg);
+                // console.log(msg);
+                if (msg.attributeName === 'actualusage') {
+                  var actualusage = JSON.stringify(msg.value) + ' watt';
+                  document.getElementById('actualusage').innerHTML = actualusage;
+                }
+                if (msg.attributeName === 'total_gas') {
+                  var total_gas = JSON.stringify(msg.value);
+                  document.getElementById('total_gas').innerHTML = total_gas;
+                }
+                if (msg.attributeName === 'tariff1totalusage') {
+                  var tariff1totalusage = JSON.stringify(msg.value);
+                  document.getElementById('tariff1totalusage').innerHTML = tariff1totalusage;
+                }
+                if (msg.attributeName === 'tariff2totalusage') {
+                  var tariff2totalusage = JSON.stringify(msg.value);
+                  document.getElementById('tariff2totalusage').innerHTML = tariff2totalusage;
+                }
               });
               socket.on('disconnect', function(){});
             h1 Energieverbruik
             p Hier moet nog iets van een mooi grafiekje komen ofzo.
             p
+              table
+                tr
+                  td Huidig stroomverbruik:
+                  td Gasverbruik in m3:
+                tr
+                  td(class='energieverbruik' id='actualusage')
+                    Leeg
+                  td(class='energieverbruik' id='total_gas')
+                    Leeg
+                tr
+                  td Stroomverbruik Laag:
+                  td Stroomverbruik Hoog:
+                tr
+                  td(class='energieverbruik' id='tariff1totalusage')
+                    Leeg
+                  td(class='energieverbruik' id='tariff2totalusage')
+                    Leeg
           else
             h1 Inloggen
             p
@@ -113,4 +144,3 @@ html
                 input(type='text' name='wachtwoord')
                 br
                 input(type='submit' value='Verstuur')
-

@@ -116,7 +116,6 @@ app.post(startPage, function (req, res) {
   })
 })
 
-
 // Een switch functie dient als lookup voor de pagina die wordt opgevraagd
 // binnen /api/. Een request voor /api/ zelf levert geen pagina.
 app.get('/api/:action', function (req, res) {
