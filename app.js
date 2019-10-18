@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const session = require('express-session')
 const address = require('address')
 const body = require('body/form')
 const path = require('path')
@@ -91,12 +92,23 @@ pimaticApi.on()
 app.set('view engine', 'pug')
 app.set('views', path.resolve(__dirname, 'views'))
 app.use('*/static', express.static(path.resolve(__dirname, 'public')))
+app.use(session({secret: 'paper motion', cookie: {maxAge:63113852000}})) // cookieduur: 2 jaar
 
 // De pagina waar het allemaal mee begint:
 app.get(startPage, function (req, res) {
-  res.render('index', {
-    title: 'Home'
-  })
+  if (req.session.username && req.session.wachtwoord) {
+    res.render('index', {
+      title: 'Home',
+      credentials: {
+        user: req.session.username,
+        pass: req.session.wachtwoord
+      }
+    })
+  } else {
+    res.render('index', {
+      title: 'Home'
+    })
+  }
 })
 app.post(startPage, function (req, res) {
   logger('POST received...', 'yellow')
@@ -105,6 +117,9 @@ app.post(startPage, function (req, res) {
     if (err) logger('There was an error: ' + err, 'red')
     logger(post.username, 'yellow')
     logger(post.wachtwoord, 'yellow')
+
+    req.session.username = post.username
+    req.session.wachtwoord = post.wachtwoord
 
     res.render('index', {
       title: 'Home',
