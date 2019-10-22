@@ -93,6 +93,13 @@ html
                 timeout: 20000,
                 forceNew: true
               });
+              var socket2 = io('http://192.168.2.74:5000', {
+                reconnection: true,
+                reconnectionDelay: 1000,
+                reconnectionDelayMax: 3000,
+                timeout: 20000,
+                forceNew: true
+              });
               socket.on('connect', function(){});
               socket.on('event', function(data){});
               socket.on('deviceAttributeChanged', function (msg){
@@ -115,6 +122,13 @@ html
                 }
               });
               socket.on('disconnect', function(){});
+              
+              socket2.on('connect', function(){});
+              socket2.on('event', function(data){});
+              socket2.on('senseHat', function (msg){
+                console.log(msg);
+              });
+              socket2.on('disconnect', function(){});
             h1 Energieverbruik
             p Dit is het huidige energieverbruik:
             p
