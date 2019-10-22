@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const session = require('express-session')
 const address = require('address')
 const body = require('body/form')
@@ -92,6 +93,7 @@ pimaticApi.on()
 app.set('view engine', 'pug')
 app.set('views', path.resolve(__dirname, 'views'))
 app.use('*/static', express.static(path.resolve(__dirname, 'public')))
+app.use(cors())
 app.use(session({secret: 'paper motion', cookie: {maxAge:63113852000}})) // cookieduur: 2 jaar
 
 // De pagina waar het allemaal mee begint:
