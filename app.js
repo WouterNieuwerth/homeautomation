@@ -92,6 +92,7 @@ pimaticApi.on()
 app.set('view engine', 'pug')
 app.set('views', path.resolve(__dirname, 'views'))
 app.use('*/static', express.static(path.resolve(__dirname, 'public')))
+app.use(session({secret: 'paper motion', cookie: {maxAge:63113852000}})) // cookieduur: 2 jaar
 
 // De pagina waar het allemaal mee begint:
 app.get(startPage, function (req, res) {
