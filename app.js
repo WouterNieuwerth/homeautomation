@@ -1,7 +1,10 @@
 const express = require('express')
 const app = express()
+<<<<<<< HEAD
 const cors = require('cors')
 const session = require('express-session')
+=======
+>>>>>>> parent of 07853f1... Merge pull request #27 from WouterNieuwerth/express-session
 const address = require('address')
 const body = require('body/form')
 const path = require('path')
@@ -93,6 +96,7 @@ pimaticApi.on()
 app.set('view engine', 'pug')
 app.set('views', path.resolve(__dirname, 'views'))
 app.use('*/static', express.static(path.resolve(__dirname, 'public')))
+<<<<<<< HEAD
 app.use(cors())
 app.use(session({secret: 'paper motion', cookie: {maxAge:63113852000}})) // cookieduur: 2 jaar
 
@@ -111,6 +115,14 @@ app.get(startPage, function (req, res) {
       title: 'Home'
     })
   }
+=======
+
+// De pagina waar het allemaal mee begint:
+app.get(startPage, function (req, res) {
+  res.render('index', {
+    title: 'Home'
+  })
+>>>>>>> parent of 07853f1... Merge pull request #27 from WouterNieuwerth/express-session
 })
 app.post(startPage, function (req, res) {
   logger('POST received...', 'yellow')
@@ -119,9 +131,12 @@ app.post(startPage, function (req, res) {
     if (err) logger('There was an error: ' + err, 'red')
     logger(post.username, 'yellow')
     logger(post.wachtwoord, 'yellow')
+<<<<<<< HEAD
 
     req.session.username = post.username
     req.session.wachtwoord = post.wachtwoord
+=======
+>>>>>>> parent of 07853f1... Merge pull request #27 from WouterNieuwerth/express-session
 
     res.render('index', {
       title: 'Home',
