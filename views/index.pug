@@ -86,7 +86,6 @@ html
           if credentials
             script(src='https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js')
             script.
-              var switch = false;
               var socket = io('http://192.168.2.13:8080/?username=#{credentials.user}&password=#{credentials.pass}', {
                 reconnection: true,
                 reconnectionDelay: 1000,
@@ -99,23 +98,6 @@ html
               socket.on('deviceAttributeChanged', function (msg){
                 // console.log(msg);
                 if (msg.attributeName === 'actualusage') {
-                  if (msg.value > 1000 && switch === false) {
-                    // on
-                    fetch('http://192.168.2.74:4444/api/led/set_color/255/0/0', {mode: 'no-cors'}).then(function(response) {
-                      console.log(response);
-                    }).catch(function(error) {
-                      console.log('Request failed', error)
-                    });
-                    switch = true;
-                  } else if (msg.value < 1000 && switch === true) {
-                    // off
-                    fetch('http://192.168.2.74:4444/api/led/off', {mode: 'no-cors'}).then(function(response) {
-                      console.log(response);
-                    }).catch(function(error) {
-                      console.log('Request failed', error)
-                    });
-                    switch = false;
-                  }
                   var actualusage = JSON.stringify(msg.value) + ' watt';
                   document.getElementById('actualusage').innerHTML = actualusage;
                 }
