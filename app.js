@@ -11,10 +11,10 @@ const notify = require('./home-notifier.js').notify
 const discoverChromecasts = require('./home-notifier.js').discover
 const goodmorning = require('./greeter.js').goodmorning
 const pimaticApi = require('./api/pimatic_api.js')
-const thermostat = require('./api/thermostat.js').router
-const setTemp = require('./api/thermostatRequests.js').setTemp
-const returnToSchedule = require('./api/thermostatRequests.js').returnToSchedule
-const getAPIKeys = require('./api/thermostat.js').getAPIKeys
+// const thermostat = require('./api/thermostat.js').router
+// const setTemp = require('./api/thermostatRequests.js').setTemp
+// const returnToSchedule = require('./api/thermostatRequests.js').returnToSchedule
+// const getAPIKeys = require('./api/thermostat.js').getAPIKeys
 
 // Paar algemene variabelen:
 var startPage = '/'
@@ -77,7 +77,7 @@ address(function (err, addrs) {
   if (err) throw err
   if (addrs.ip === '192.168.2.18') {
     logger('Testomgeving live, geen contactsensors activeren...', 'yellow')
-  } else if (addrs.ip === '192.168.2.13') {
+  } else if (addrs.ip === '192.168.2.17') {
     // Activeer de contactsensors:
     contactsensors.contactsensors()
   } else {
@@ -425,7 +425,7 @@ app.post('/notifier', function (req, res) {
   })
 })
 
-app.use('/thermostat', thermostat)
+// app.use('/thermostat', thermostat)
 
 app.use(function (req, res, next) {
   res.status(404).render('404', {
@@ -443,7 +443,7 @@ address(function (err, addrs) {
   var port = 3456
   if (addrs.ip === '192.168.2.18') {
     port = 3456
-  } else if (addrs.ip === '192.168.2.13') {
+  } else if (addrs.ip === '192.168.2.17') {
     port = 2345
   } else {
     logger('Interne IP-adressen zijn gewijzigd!', 'red')

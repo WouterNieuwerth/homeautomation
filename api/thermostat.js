@@ -29,7 +29,7 @@ publicIp.v4().then(ip => {
       apiKey = privateStuff.honeywell_apiKey_test
       secret = privateStuff.honeywell_secret_test
       redirectUri = 'http://' + ip + ':3456/thermostat/code'
-    } else if (addrs.ip === '192.168.2.13') {
+    } else if (addrs.ip === '192.168.2.17') {
       // LIVE
       apiKey = privateStuff.honeywell_apiKey_live
       secret = privateStuff.honeywell_secret_live
