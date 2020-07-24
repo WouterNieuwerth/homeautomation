@@ -7,17 +7,17 @@ const path = require('path')
 const logger = require('./logger.js')
 const timer = require('./timer.js')
 const contactsensors = require('./contactsensors.js')
+const deurbel = require('./deurbel.js')
 const notify = require('./home-notifier.js').notify
 const discoverChromecasts = require('./home-notifier.js').discover
 const goodmorning = require('./greeter.js').goodmorning
 const pimaticApi = require('./api/pimatic_api.js')
-// const thermostat = require('./api/thermostat.js').router
-// const setTemp = require('./api/thermostatRequests.js').setTemp
-// const returnToSchedule = require('./api/thermostatRequests.js').returnToSchedule
-// const getAPIKeys = require('./api/thermostat.js').getAPIKeys
+const deurbel = require('./deurbel.js')
 
 // Paar algemene variabelen:
 var startPage = '/'
+const testIPaddress = '192.168.2.18'
+const liveIPaddress = '192.168.2.17'
 
 /*
  * Schema voor het in- en uitschakelen van de boiler.
@@ -70,16 +70,17 @@ timer.boilerTimer(boilerSchemas)
 // Zorg ervoor dat de Google Home bekend is voor de notifier
 discoverChromecasts()
 
-// Maak de contactsensors op de deuren actief,
+// Maak de contactsensors op de deuren en de deurbel actief,
 // maar alleen als we niet aan het testen zijn.
 // Zo sturen we geen dubbele hits naar Analytics.
 address(function (err, addrs) {
   if (err) throw err
-  if (addrs.ip === '192.168.2.18') {
-    logger('Testomgeving live, geen contactsensors activeren...', 'yellow')
-  } else if (addrs.ip === '192.168.2.17') {
+  if (addrs.ip === testIPaddress) {
+    logger('Testomgeving live, geen contactsensors en deurbel activeren...', 'yellow')
+  } else if (addrs.ip === liveIPaddress) {
     // Activeer de contactsensors:
     contactsensors.contactsensors()
+    deurbel.deurbel()
   } else {
     logger('Interne IP-adressen zijn gewijzigd!', 'red')
   }
@@ -377,17 +378,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('boiler', 'boiler', 'turnOff')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'turnOff')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
-      var APIKeys = getAPIKeys()
-      // logger(JSON.stringify(APIKeys.Locations),'red');
-      for (var i = 0; i < APIKeys.Locations.length; i++) {
-        if (APIKeys.Locations[i].devices[0]) {
-          if (APIKeys.Locations[i].devices[0].changeableValues.heatSetpoint !== 16.5) {
-            logger('Temperatuur wordt verlaagd', 'green')
-            setTemp(16.5, getAPIKeys)
-          }
-        }
-      }
-      break
+      pimaticApi.callDeviceAction('tuinverlichting', 'tuinverlichting', 'turnOff')
     // IFTTT
     case 'netflix-and-chill':
       pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOn')
@@ -397,10 +388,6 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
       pimaticApi.callDeviceAction('keuken-scene-relax', undefined, undefined, { deviceId: 'tradfri_scene_131076', actionName: 'buttonPressed', buttonId: 'tradfri_131081_196633' })
       pimaticApi.callDeviceAction('tafel-scene-relax', undefined, undefined, { deviceId: 'tradfri_scene_131074', actionName: 'buttonPressed', buttonId: 'tradfri_131074_196612' })
-      break
-    // Web interface
-    case 'returntoschedule':
-      returnToSchedule(getAPIKeys)
       break
     default:
       logger("Couldn't find: " + req.params.action, 'red')
@@ -433,8 +420,6 @@ app.post('/notifier', function (req, res) {
   })
 })
 
-// app.use('/thermostat', thermostat)
-
 app.use(function (req, res, next) {
   res.status(404).render('404', {
     title: '404'
@@ -449,9 +434,9 @@ address(function (err, addrs) {
   logger(`This device has the following addresses: IP: ${addrs.ip}, IPv6: ${addrs.ipv6}, MAC: ${addrs.mac}`, 'blue')
 
   var port = 3456
-  if (addrs.ip === '192.168.2.18') {
+  if (addrs.ip === testIPaddress) {
     port = 3456
-  } else if (addrs.ip === '192.168.2.17') {
+  } else if (addrs.ip === liveIPaddress) {
     port = 2345
   } else {
     logger('Interne IP-adressen zijn gewijzigd!', 'red')
