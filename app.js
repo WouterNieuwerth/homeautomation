@@ -12,7 +12,6 @@ const notify = require('./home-notifier.js').notify
 const discoverChromecasts = require('./home-notifier.js').discover
 const goodmorning = require('./greeter.js').goodmorning
 const pimaticApi = require('./api/pimatic_api.js')
-const deurbel = require('./deurbel.js')
 
 // Paar algemene variabelen:
 var startPage = '/'
