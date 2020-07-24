@@ -356,6 +356,14 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('boiler', 'boiler', 'turnOff')
       break
     // Web interface
+    case 'tuinverlichting-on':
+      pimaticApi.callDeviceAction('tuinverlichting', 'tuinverlichting', 'turnOn')
+      break
+    // Web interface
+    case 'tuinverlichting-off':
+      pimaticApi.callDeviceAction('tuinverlichting', 'tuinverlichting', 'turnOff')
+      break
+    // Web interface
     case 'greet':
       goodmorning(true)
       break
