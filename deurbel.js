@@ -11,7 +11,7 @@ function deurbel () {
       logger('===============================', 'blue')
       try {
         analyticsHit(attrEvent)
-        notify('Er staat iemand voor de deur!', 'en-AU')
+        notify('Er staat iemand voor de deur!', 'nl-NL')
       } catch (error) {
         logger(`ERROR: Er ging iets mis met het versturen van de Analytics hit in contactsensor.js. ${err}`, 'red')
       }
