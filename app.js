@@ -410,6 +410,9 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'turnOff')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
       pimaticApi.callDeviceAction('tuinverlichting', 'tuinverlichting', 'turnOff')
+      pimaticApi.callDeviceAction('elro-3', 'elro-3', 'turnOff')
+      pimaticApi.callDeviceAction('tuin-contactdoos-1', 'tuin-contactdoos-1', 'turnOff')
+      pimaticApi.callDeviceAction('tuin-contactdoos-2', 'tuin-contactdoos-2', 'turnOff')
     // IFTTT
     case 'netflix-and-chill':
       pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOn')
