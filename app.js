@@ -413,6 +413,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('elro-3', 'elro-3', 'turnOff')
       pimaticApi.callDeviceAction('tuin-contactdoos-1', 'tuin-contactdoos-1', 'turnOff')
       pimaticApi.callDeviceAction('tuin-contactdoos-2', 'tuin-contactdoos-2', 'turnOff')
+      break
     // IFTTT
     case 'netflix-and-chill':
       pimaticApi.callDeviceAction('led-lamp1', 'led-lamp', 'turnOn')
