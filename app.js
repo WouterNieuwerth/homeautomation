@@ -364,6 +364,30 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('tuinverlichting', 'tuinverlichting', 'turnOff')
       break
     // Web interface
+    case 'tuinbolletjes-on':
+      pimaticApi.callDeviceAction('elro-3', 'elro-3', 'turnOn')
+      break
+    // Web interface
+    case 'tuinbolletjes-off':
+      pimaticApi.callDeviceAction('elro-3', 'elro-3', 'turnOff')
+      break
+    // Web interface
+    case 'tuin-contactdoos-1-on':
+      pimaticApi.callDeviceAction('tuin-contactdoos-1', 'tuin-contactdoos-1', 'turnOn')
+      break
+    // Web interface
+    case 'tuin-contactdoos-1-off':
+      pimaticApi.callDeviceAction('tuin-contactdoos-1', 'tuin-contactdoos-1', 'turnOff')
+      break
+    // Web interface
+    case 'tuin-contactdoos-2-on':
+      pimaticApi.callDeviceAction('tuin-contactdoos-2', 'tuin-contactdoos-2', 'turnOn')
+      break
+    // Web interface
+    case 'tuin-contactdoos-2-off':
+      pimaticApi.callDeviceAction('tuin-contactdoos-2', 'tuin-contactdoos-2', 'turnOff')
+      break
+    // Web interface
     case 'quooker-on':
       pimaticApi.callDeviceAction('boiler', 'boiler', 'turnOn')
       break
