@@ -51,7 +51,10 @@ function on () {
     if (attrEvent.deviceId !== 'smartmeter2' &&
     attrEvent.deviceId !== 'show_actual_electricity' &&
     attrEvent.deviceId !== 'show_total_gas' &&
-    attrEvent.deviceId !== 'show_total_electricity') {
+    attrEvent.deviceId !== 'show_total_electricity' &&
+    attrEvent.deviceId !== 'show_total_electricity_minus_delivery' &&
+    attrEvent.deviceId !== 'show_actual_electricity_delivery' &&
+    attrEvent.deviceId !== 'show_total_electricity_delivery') {
       logger(`deviceAttributeChanged: ${JSON.stringify(attrEvent)}`, 'green')
     }
   })

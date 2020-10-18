@@ -144,6 +144,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'toggle')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'toggle')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'toggle')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'toggle')
       // notify('Toggled everything.', _.sample(dialects));
       break
     // IFTTT
@@ -155,6 +156,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'turnOn')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOn')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOn')
       break
     // IFTTT
     case 'off-everything':
@@ -165,6 +167,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOff')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'turnOff')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOff')
       break
     // Web interface
     case 'everything-on':
@@ -175,6 +178,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'turnOn')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOn')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOn')
       // notify('Switched everything on.', _.sample(dialects));
       break
     // Web interface
@@ -186,6 +190,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOff')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'turnOff')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOff')
       // notify('Switched everything off.', _.sample(dialects));
       break
     // Web interface
@@ -195,6 +200,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('bolletjes', 'elro-1', 'toggle')
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'toggle')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'toggle')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'toggle')
       // notify('Toggled the lights.', _.sample(dialects));
       break
     // IFTTT
@@ -205,6 +211,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'toggle')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'toggle')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'toggle')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'toggle')
       // notify('Toggled the lights.', _.sample(dialects));
       break
     // IFTTT
@@ -215,6 +222,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'turnOn')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOn')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOn')
       break
     // IFTTT
     case 'off-the lights':
@@ -224,6 +232,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOff')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'turnOff')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOff')
       break
     // Web interface
     case 'lights-on':
@@ -233,6 +242,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'turnOn')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOn')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOn')
       // notify('Switched the lights on.', _.sample(dialects));
       break
     // Web interface
@@ -243,6 +253,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOff')
       pimaticApi.callDeviceAction('Keuken', 'tradfri_131081', 'turnOff')
       pimaticApi.callDeviceAction('Tafel', 'tradfri_131074', 'turnOff')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOff')
       // notify('Switched the lights off.', _.sample(dialects));
       break
     // Web interface
@@ -273,6 +284,16 @@ app.get('/api/:action', function (req, res) {
     // Web interface
     case 'vloerlamp-off':
       pimaticApi.callDeviceAction('vloerlamp1', 'tradfri_65546', 'turnOff')
+      // notify('Switched the floor light off.', _.sample(dialects));
+      break
+    // Web interface
+    case 'leeslamp-on':
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOn')
+      // notify('Switched the floor light on.', _.sample(dialects));
+      break
+    // Web interface
+    case 'leeslamp-off':
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOff')
       // notify('Switched the floor light off.', _.sample(dialects));
       break
     // Web interface
@@ -413,6 +434,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('elro-3', 'elro-3', 'turnOff')
       pimaticApi.callDeviceAction('tuin-contactdoos-1', 'tuin-contactdoos-1', 'turnOff')
       pimaticApi.callDeviceAction('tuin-contactdoos-2', 'tuin-contactdoos-2', 'turnOff')
+      pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOff')
       break
     // IFTTT
     case 'netflix-and-chill':
