@@ -1,0 +1,54 @@
+doctype html
+html
+  head
+    include tagmanagertop.js
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm' crossorigin='anonymous')
+    link(rel='stylesheet' href='static/style.css')
+    meta(name='viewport', content='width=device-width initial-scale=1.0')
+    title= title
+  body
+    include tagmanagerbottom.js
+    h1 Thermostaat
+    if access_token
+        p
+        | Pas hieronder de instellingen van de thermostaat aan:
+        p
+            table
+                tr
+                    td
+                        form(method='POST' action='/thermostat/settemperature')
+                            input(type='hidden' name='temperature', value='16.5')
+                            input(class='btn-small' type='submit' value='Laag')
+                    td
+                        form(method='POST' action='/thermostat/settemperature')
+                            input(type='hidden' name='temperature', value='21.0')
+                            input(class='btn-small' type='submit' value='Hoog')
+                tr
+                    form(method='POST' action='/thermostat/settemperature')
+                        td
+                            select(name='temperature')
+                                option(value='16.5') 16.5 graden
+                                option(value='17.0') 17.0 graden
+                                option(value='17.5') 17.5 graden
+                                option(value='18.0') 18.0 graden
+                                option(value='18.5') 18.5 graden
+                                option(value='19.0') 19.0 graden
+                                option(value='19.5') 19.5 graden
+                                option(value='20.0') 20.0 graden
+                                option(value='20.5') 20.5 graden
+                                option(value='21.0') 21.0 graden
+                        td
+                            input(class='btn-small' type='submit' value='Verstuur')
+        p
+            table
+                tr
+                    td
+                        a(class='btn-small' id='refresh' href='/thermostat/refresh') Refresh token
+                tr
+                    td
+                        a(class='btn-small' id='device_0' href='/thermostat/getdevice0') Get device
+    else if login_url
+        p
+            a(class='btn-small' id='login' href=login_url) Log in
+    p
+        a(class='btn' id='home' href='/') Home
