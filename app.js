@@ -12,6 +12,9 @@ const notify = require('./home-notifier.js').notify
 const discoverChromecasts = require('./home-notifier.js').discover
 const goodmorning = require('./greeter.js').goodmorning
 const pimaticApi = require('./api/pimatic_api.js')
+const thermostat = require('./api/nest_thermostat.js').router
+const expose_nest_tokens = require('./api/nest_thermostat.js').expose_nest_tokens
+const set_temperature = require('./api/nest_thermostat.js').set_temperature
 
 // Paar algemene variabelen:
 var startPage = '/'
@@ -92,7 +95,8 @@ pimaticApi.on()
 app.set('view engine', 'pug')
 app.set('views', path.resolve(__dirname, 'views'))
 app.use('*/static', express.static(path.resolve(__dirname, 'public')))
-app.use(session({secret: 'paper motion', cookie: {maxAge:63113852000}})) // cookieduur: 2 jaar
+app.use(session({ secret: 'paper motion', cookie: { maxAge: 63113852000 } })) // cookieduur: 2 jaar
+app.use('/thermostat', thermostat)
 
 // De pagina waar het allemaal mee begint:
 app.get(startPage, function (req, res) {
@@ -435,6 +439,18 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('tuin-contactdoos-1', 'tuin-contactdoos-1', 'turnOff')
       pimaticApi.callDeviceAction('tuin-contactdoos-2', 'tuin-contactdoos-2', 'turnOff')
       pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOff')
+      var nest_tokens = expose_nest_tokens()
+      var post_data = JSON.stringify({
+        command: 'sdm.devices.commands.ThermostatTemperatureSetpoint.SetHeat',
+        params: { heatCelsius: 16.5 }
+      })
+      var headers = {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + nest_tokens.access_token
+      }
+      set_temperature(post_data, headers, function (response) {
+        logger(response)
+      })
       break
     // IFTTT
     case 'netflix-and-chill':
