@@ -38,7 +38,7 @@ router.get('/code', function (req, res) {
       refresh_token: refresh_token,
       grant_type: 'refresh_token'
     })
-    setInterval(get_token, 30000, post_data, function(response) {
+    setInterval(get_token, 300000, post_data, function(response) {
       access_token = JSON.parse(response).access_token
       logger(`Nest API access token refreshed: ${access_token}`,'green')
     })
