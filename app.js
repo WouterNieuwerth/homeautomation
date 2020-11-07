@@ -15,6 +15,8 @@ const pimaticApi = require('./api/pimatic_api.js')
 const thermostat = require('./api/nest_thermostat.js').router
 const expose_nest_tokens = require('./api/nest_thermostat.js').expose_nest_tokens
 const set_temperature = require('./api/nest_thermostat.js').set_temperature
+const somfy_router = require('./api/somfy.js').router
+const move_shutters = require('./api/somfy.js').move_shutters
 
 // Paar algemene variabelen:
 var startPage = '/'
@@ -97,6 +99,7 @@ app.set('views', path.resolve(__dirname, 'views'))
 app.use('*/static', express.static(path.resolve(__dirname, 'public')))
 app.use(session({ secret: 'paper motion', cookie: { maxAge: 63113852000 } })) // cookieduur: 2 jaar
 app.use('/thermostat', thermostat)
+app.use('/somfy', somfy_router)
 
 // De pagina waar het allemaal mee begint:
 app.get(startPage, function (req, res) {
@@ -439,6 +442,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('tuin-contactdoos-1', 'tuin-contactdoos-1', 'turnOff')
       pimaticApi.callDeviceAction('tuin-contactdoos-2', 'tuin-contactdoos-2', 'turnOff')
       pimaticApi.callDeviceAction('Leeslamp', 'tradfri_65554', 'turnOff')
+      move_shutters('down')
       var nest_tokens = expose_nest_tokens()
       var post_data = JSON.stringify({
         command: 'sdm.devices.commands.ThermostatTemperatureSetpoint.SetHeat',
@@ -461,6 +465,7 @@ app.get('/api/:action', function (req, res) {
       pimaticApi.callDeviceAction('kleurtjeslamp', 'elro-2', 'turnOn')
       pimaticApi.callDeviceAction('keuken-scene-relax', undefined, undefined, { deviceId: 'tradfri_scene_131076', actionName: 'buttonPressed', buttonId: 'tradfri_131081_196633' })
       pimaticApi.callDeviceAction('tafel-scene-relax', undefined, undefined, { deviceId: 'tradfri_scene_131074', actionName: 'buttonPressed', buttonId: 'tradfri_131074_196612' })
+      move_shutters('down')
       break
     default:
       logger("Couldn't find: " + req.params.action, 'red')
