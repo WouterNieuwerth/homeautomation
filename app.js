@@ -20,8 +20,6 @@ const somfy_router = require('./api/somfy.js').router
 const move_shutters = require('./api/somfy.js').move_shutters
 const secrets = require('../private/private.js')
 
-logger(JSON.stringify(secrets))
-
 // Paar algemene variabelen:
 var startPage = '/'
 const testIPaddress = '192.168.2.18'
