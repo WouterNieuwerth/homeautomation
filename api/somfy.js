@@ -30,7 +30,7 @@ if (Gpio.accessible) {
   }
 }
 
-const delay = 100
+const delay = 80
 
 router.get('/somfy_up', function (req, res) {
   move_shutters('up')
@@ -55,11 +55,11 @@ function move_shutters (direction) {
 }
 
 function up (s) {
-  pin_up.write(s)
+  pin_up.writeSync(s)
 }
 
 function down (s) {
-  pin_down.write(s)
+  pin_down.writeSync(s)
 }
 
 module.exports = {
