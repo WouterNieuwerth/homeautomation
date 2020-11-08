@@ -4,6 +4,7 @@ const session = require('express-session')
 const address = require('address')
 const body = require('body/form')
 const path = require('path')
+const basicAuth = require('express-basic-auth')
 const logger = require('./logger.js')
 const timer = require('./timer.js')
 const contactsensors = require('./contactsensors.js')
@@ -17,6 +18,9 @@ const expose_nest_tokens = require('./api/nest_thermostat.js').expose_nest_token
 const set_temperature = require('./api/nest_thermostat.js').set_temperature
 const somfy_router = require('./api/somfy.js').router
 const move_shutters = require('./api/somfy.js').move_shutters
+const secrets = require('../private/private.js')
+
+logger(JSON.stringify(secrets))
 
 // Paar algemene variabelen:
 var startPage = '/'
@@ -100,6 +104,15 @@ app.use('*/static', express.static(path.resolve(__dirname, 'public')))
 app.use(session({ secret: 'paper motion', cookie: { maxAge: 63113852000 } })) // cookieduur: 2 jaar
 app.use('/thermostat', thermostat)
 app.use('/somfy', somfy_router)
+app.use(basicAuth({
+  users: { 'wouter': secrets.pw },
+  challenge: true,
+  realm: 'wouter',
+  unauthorizedResponse: (req) => {
+    logger(`Someone tried to access this website. ip: ${req.ip}`,'red')
+    return `Unauthorized. Your IP was logged: ${req.ip}`
+  }
+}))
 
 // De pagina waar het allemaal mee begint:
 app.get(startPage, function (req, res) {

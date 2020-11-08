@@ -1,7 +1,16 @@
-const Gpio = require('onoff').Gpio
+let Gpio
 const express = require('express')
 const router = express.Router()
 const logger = require('../logger.js')
+
+// Onoff cannot be installed on devices without Gpio
+try {
+  Gpio = require('onoff').Gpio
+} catch (err) {
+  Gpio = {
+    accessible: false
+  }
+}
 
 let pin_up, pin_down
 
