@@ -78,6 +78,14 @@ router.get('/getdevice0', function (req, res) {
   })
 })
 
+router.get('/json/getdevice0', function (req, res) {
+  get_device_0(function (device_0) {
+    logger(`Nest API device_0: ${device_0}`, 'green')
+    device_0 = JSON.parse(device_0)
+    res.json(device_0)
+  })
+})
+
 router.post('/settemperature', function (req, res) {
   body(req, res, function (err, post) {
     if (err) logger('There was an error: ' + err, 'red')
