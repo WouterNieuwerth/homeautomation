@@ -1,44 +1,19 @@
 const pimaticApi = require('./api/pimatic_api.js')
 const socket = pimaticApi.socket
-const http = require('http')
-const uuid = require('uuid/v4')
 const goodmorning = require('./greeter.js').goodmorning
 const logger = require('./logger.js')
+const analyticsEvent = require('./analytics.js').analyticsEvent
 
 function contactsensors () {
   socket.on('deviceAttributeChanged', function (attrEvent) {
     if (attrEvent.attributeName === 'contact') {
       logger('===============================', 'blue')
       try {
-        analyticsHit(attrEvent)
+        analyticsEvent(attrEvent.attributeName, attrEvent.value, attrEvent.deviceId)
         goodmorning(false)
       } catch (error) {
         logger(`ERROR: Er ging iets mis met het versturen van de Analytics hit in contactsensor.js. ${err}`, 'red')
       }
-    }
-  })
-}
-
-function analyticsHit (attrEvent) {
-  var cid = uuid()
-  var hit = 'http://www.google-analytics.com/collect?v=1&t=event&tid=UA-2182368-7&cid=' + cid +
-  '&ec=' + attrEvent.attributeName +
-  '&ea=' + attrEvent.value +
-  '&el=' + attrEvent.deviceId
-
-  logger(hit, 'blue')
-
-  http.get(hit, (res) => {
-    // console.log(res);
-    const { statusCode } = res
-    var error
-    if (statusCode !== 200) {
-      error = 'Request Failed.\n' +
-        `Status Code: ${statusCode}`
-    }
-    if (error) {
-      logger(error, 'red')
-      res.resume()
     }
   })
 }

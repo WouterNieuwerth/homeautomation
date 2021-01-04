@@ -30,7 +30,7 @@ if (Gpio.accessible) {
   }
 }
 
-const delay = 80
+const delay = 2000
 
 router.get('/somfy_up', function (req, res) {
   move_shutters('up')
