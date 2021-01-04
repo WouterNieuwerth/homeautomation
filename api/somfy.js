@@ -30,7 +30,7 @@ if (Gpio.accessible) {
   }
 }
 
-const delay = 20000
+const delay = 25000
 
 router.get('/somfy_up', function (req, res) {
   res.redirect('/')

@@ -19,20 +19,14 @@ html
               td Temperatuur binnen:
               td Instelling thermostaat
             tr
-              td(class='temperatuur')= thermostat.indoorTemperature
-              td(class='temperatuur')= thermostat.changeableValues.heatSetpoint
+              td(class='temperatuur')= thermostat['traits']['sdm.devices.traits.Temperature']['ambientTemperatureCelsius']
+              td(class='temperatuur')= thermostat['traits']['sdm.devices.traits.ThermostatTemperatureSetpoint']['heatCelsius']
             tr
               td Temperatuur buiten:
               td Luchtvochtigheid:
             tr
-              td(class='temperatuur')= thermostat.outdoorTemperature
-              td(class='temperatuur')= thermostat.displayedOutdoorHumidity
-            tr
-              td Temperatuur API:
-              td Luchtvochtigheid API:
-            tr
-              td(class='temperatuur')= currentWeather.main.temp
-              td(class='temperatuur')= currentWeather.main.humidity
+              td(class='temperatuur')= 0
+              td(class='temperatuur')= thermostat['traits']['sdm.devices.traits.Humidity']['ambientHumidityPercent']
       p
         | Pas hieronder de instellingen van de thermostaat aan:
       p

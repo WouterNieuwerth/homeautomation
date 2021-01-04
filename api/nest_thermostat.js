@@ -7,13 +7,14 @@ const body = require('body/form')
 const secrets = require('../../private/private.js')
 
 const login_url = 'https://nestservices.google.com/partnerconnections/' + secrets.nest_project_id + '/auth?redirect_uri=' + secrets.nest_redirect_uri + '&access_type=offline&prompt=consent&client_id=' + secrets.nest_client_id + '&response_type=code&scope=https://www.googleapis.com/auth/sdm.service'
-var code, access_token, refresh_token, device_0_name
+var code, access_token, refresh_token, device_0_name, device_0
 
 router.get('/', function (req, res) {
   res.render('nest_thermostat', {
     title: 'Thermostaat',
     login_url: login_url,
-    access_token: access_token
+    access_token: access_token,
+    theromostat: device_0
   })
 })
 
