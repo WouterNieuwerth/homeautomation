@@ -55,11 +55,11 @@ function move_shutters (direction) {
 }
 
 function up (s) {
-  pin_up.writeSync(s)
+  pin_up.write(s)
 }
 
 function down (s) {
-  pin_down.writeSync(s)
+  pin_down.write(s)
 }
 
 module.exports = {
