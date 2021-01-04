@@ -29,19 +29,27 @@ router.get('/code', function (req, res) {
   })
   get_token(post_data, function (token) {
     logger(`Nest API tokens: ${token}`, 'green')
-    token = JSON.parse(token)
-    access_token = token.access_token
-    refresh_token = token.refresh_token
-    const post_data = JSON.stringify({
-      client_id: secrets.nest_client_id,
-      client_secret: secrets.nest_client_secret,
-      refresh_token: refresh_token,
-      grant_type: 'refresh_token'
-    })
-    setInterval(get_token, 300000, post_data, function(response) {
-      access_token = JSON.parse(response).access_token
-      logger(`Nest API access token refreshed: ${access_token}`,'green')
-    })
+    try {
+      token = JSON.parse(token)
+      access_token = token.access_token
+      refresh_token = token.refresh_token
+      const post_data = JSON.stringify({
+        client_id: secrets.nest_client_id,
+        client_secret: secrets.nest_client_secret,
+        refresh_token: refresh_token,
+        grant_type: 'refresh_token'
+      })
+      setInterval(get_token, 300000, post_data, function(response) {
+        try {
+          access_token = JSON.parse(response).access_token
+          logger(`Nest API access token refreshed: ${access_token}`,'green')
+        } catch (error) {
+          logger(error, 'red')
+        }
+      })
+    } catch (error) {
+      logger(error, 'red')
+    }
     res.redirect('/thermostat/getdevices')
   })
 })
@@ -55,8 +63,12 @@ router.get('/refresh', function (req, res) {
   })
   get_token(post_data, function (response) {
     logger(`Nest API response: ${response}`, 'green')
-    response = JSON.parse(response)
-    access_token = response.access_token
+    try {
+      response = JSON.parse(response)
+      access_token = response.access_token
+    } catch (error) {
+      logger(error, 'red')
+    }
     res.redirect('/thermostat')
   })
 })
@@ -64,8 +76,12 @@ router.get('/refresh', function (req, res) {
 router.get('/getdevices', function (req, res) {
   get_devices(function (devices) {
     logger(`Nest API devices: ${devices}`, 'green')
-    devices = JSON.parse(devices)
-    device_0_name = devices.devices[0].name
+    try {
+      devices = JSON.parse(devices)
+      device_0_name = devices.devices[0].name
+    } catch (error) {
+      logger(error, 'red')
+    }
     res.redirect('/thermostat')
   })
 })
@@ -73,7 +89,11 @@ router.get('/getdevices', function (req, res) {
 router.get('/getdevice0', function (req, res) {
   get_device_0(function (device_0) {
     logger(`Nest API device_0: ${device_0}`, 'green')
-    device_0 = JSON.parse(device_0)
+    try {
+      device_0 = JSON.parse(device_0)
+    } catch (error) {
+      logger(error, 'red')
+    }
     res.redirect('/thermostat')
   })
 })
@@ -81,8 +101,12 @@ router.get('/getdevice0', function (req, res) {
 router.get('/json/getdevice0', function (req, res) {
   get_device_0(function (device_0) {
     //logger(`Nest API device_0: ${device_0}`, 'green')
-    device_0 = JSON.parse(device_0)
-    res.json(device_0)
+    try {
+      device_0 = JSON.parse(device_0)
+      res.json(device_0)
+    } catch (error) {
+      logger(error, 'red')
+    }
   })
 })
 
