@@ -24,6 +24,7 @@ html
                   a(class='btn-small' id='tv-on' href='/api/tv-on') TV aan
                 td
                   a(class='btn-small' id='tv-off' href='/api/tv-off') TV uit
+            table
               tr
                 td
                   a(class='btn' id='goodnight' href='/api/goodnight') Nachtstand
@@ -139,6 +140,10 @@ html
                   var tariff2totalusage = JSON.stringify(msg.value);
                   document.getElementById('tariff2totalusage').innerHTML = tariff2totalusage;
                 }
+                if (msg.attributeName === 'actualdelivery') {
+                  var actualdelivery = JSON.stringify(msg.value);
+                  document.getElementById('actualdelivery').innerHTML = actualdelivery;
+                }
               });
               socket.on('disconnect', function(){});
             h1 Energieverbruik
@@ -147,6 +152,14 @@ html
               table
                 tr
                   td Huidig stroomverbruik:
+                  td Huidige teruglevering:
+                tr
+                  td(class='energieverbruik' id='actualusage')
+                    Leeg
+                  td(class='energieverbruik' id='actualdelivery')
+                    Leeg
+                tr
+                  td Leeg:
                   td Gasverbruik in m3:
                 tr
                   td(class='energieverbruik' id='actualusage')
