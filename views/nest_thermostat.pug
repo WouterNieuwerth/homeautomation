@@ -10,21 +10,27 @@ html
     include tagmanagerbottom.js
     h1 Thermostaat
     if access_token
-        if thermostat
+        if stats
             p
                 table
                     tr
                         td Temperatuur binnen:
                         td Instelling thermostaat
                     tr
-                        td(class='temperatuur')= thermostat['traits']['sdm.devices.traits.Temperature']['ambientTemperatureCelsius']
-                        td(class='temperatuur')= thermostat['traits']['sdm.devices.traits.ThermostatTemperatureSetpoint']['heatCelsius']
+                        td(class='temperatuur')= stats['nest_temperature'][0].toFixed(1) + '°'
+                        td(class='temperatuur')= stats['nest_setpoint'][0].toFixed(1) + '°'
+                    tr
+                        td Luchtvochtigheid binnen:
+                        td Luchtvochtigheid buiten:
+                    tr
+                        td(class='temperatuur')= ((stats['nest_humidity'][0] + stats['sense_humidity'][0]) / 2).toFixed(0) + '%'
+                        td(class='temperatuur')= stats['humidity'][0].toFixed(0) + '%'
                     tr
                         td Temperatuur buiten:
-                        td Luchtvochtigheid:
+                        td Luchtdruk:
                     tr
-                        td(class='temperatuur')= 0
-                        td(class='temperatuur')= thermostat['traits']['sdm.devices.traits.Humidity']['ambientHumidityPercent']
+                        td(class='temperatuur')= stats['temp'][0].toFixed(1) + '°'
+                        td(class='temperatuur')= stats['sense_pressure'][0].toFixed(0)
         p
         | Pas hieronder de instellingen van de thermostaat aan:
         p

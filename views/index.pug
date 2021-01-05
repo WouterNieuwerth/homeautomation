@@ -129,6 +129,7 @@ html
                   var actualusage = JSON.stringify(msg.value) + ' watt';
                   document.getElementById('actualusage').innerHTML = actualusage;
                 }
+                /*
                 if (msg.attributeName === 'total_gas') {
                   var total_gas = JSON.stringify(msg.value);
                   document.getElementById('total_gas').innerHTML = total_gas;
@@ -141,6 +142,7 @@ html
                   var tariff2totalusage = JSON.stringify(msg.value);
                   document.getElementById('tariff2totalusage').innerHTML = tariff2totalusage;
                 }
+                */
                 if (msg.attributeName === 'actualdelivery') {
                   var actualdelivery = JSON.stringify(msg.value);
                   document.getElementById('actualdelivery').innerHTML = actualdelivery;
@@ -148,7 +150,6 @@ html
               });
               socket.on('disconnect', function(){});
             h1 Energieverbruik
-            p Dit is het huidige energieverbruik:
             p
               table
                 tr
@@ -159,22 +160,6 @@ html
                     Leeg
                   td(class='energieverbruik' id='actualdelivery')
                     Leeg
-                tr
-                  td Leeg:
-                  td Gasverbruik in m3:
-                tr
-                  td(class='energieverbruik' id='actualusage')
-                    Leeg
-                  td(class='energieverbruik' id='total_gas')
-                    Leeg
-                tr
-                  td Stroomverbruik Laag:
-                  td Stroomverbruik Hoog:
-                tr
-                  td(class='energieverbruik' id='tariff1totalusage')
-                    Leeg
-                  td(class='energieverbruik' id='tariff2totalusage')
-                    Leeg
           else
             h1 Inloggen
             p
@@ -184,3 +169,27 @@ html
                 input(type='text' name='wachtwoord')
                 br
                 input(type='submit' value='Verstuur')
+          if stats
+            h1 Temperatuur
+            p
+                table
+                    tr
+                        td Temperatuur binnen:
+                        td Instelling thermostaat
+                    tr
+                        td(class='temperatuur')= stats['nest_temperature'][0].toFixed(1) + '°'
+                        td(class='temperatuur')= stats['nest_setpoint'][0].toFixed(1) + '°'
+                    tr
+                        td Luchtvochtigheid binnen:
+                        td Luchtvochtigheid buiten:
+                    tr
+                        td(class='temperatuur')= ((stats['nest_humidity'][0] + stats['sense_humidity'][0]) / 2).toFixed(0) + '%'
+                        td(class='temperatuur')= stats['humidity'][0].toFixed(0) + '%'
+                    tr
+                        td Temperatuur buiten:
+                        td Luchtdruk:
+                    tr
+                        td(class='temperatuur')= stats['temp'][0].toFixed(1) + '°'
+                        td(class='temperatuur')= stats['sense_pressure'][0].toFixed(0)
+          else
+            h1 No stats.

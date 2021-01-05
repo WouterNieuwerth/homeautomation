@@ -16,6 +16,7 @@ const pimaticApi = require('./api/pimatic_api.js')
 const thermostat = require('./api/nest_thermostat.js').router
 const expose_nest_tokens = require('./api/nest_thermostat.js').expose_nest_tokens
 const set_temperature = require('./api/nest_thermostat.js').set_temperature
+const last_sqlite_entry = require('./api/nest_thermostat.js').last_sqlite_entry
 const somfy_router = require('./api/somfy.js').router
 const move_shutters = require('./api/somfy.js').move_shutters
 const secrets = require('../private/private.js')
@@ -125,21 +126,32 @@ app.use(basicAuth({
 
 // De pagina waar het allemaal mee begint:
 app.get(startPage, function (req, res) {
-  if (req.session.username && req.session.wachtwoord) {
-    res.render('index', {
-      title: 'Home',
-      credentials: {
-        user: req.session.username,
-        pass: req.session.wachtwoord
+  var latest_stats
+  last_sqlite_entry(function (data) {
+    try {
+      latest_stats = JSON.parse(data)
+      if (req.session.username && req.session.wachtwoord) {
+        res.render('index', {
+          title: 'Home',
+          credentials: {
+            user: req.session.username,
+            pass: req.session.wachtwoord
+          },
+          stats: latest_stats
+        })
+      } else {
+        res.render('index', {
+          title: 'Home',
+          stats: latest_stats
+        })
       }
-    })
-  } else {
-    res.render('index', {
-      title: 'Home'
-    })
-  }
+    } catch (error) {
+      logger(error, 'red')
+    }
+  })
 })
 app.post(startPage, function (req, res) {
+  var latest_stats
   logger('POST received...', 'yellow')
 
   body(req, res, function (err, post) {
@@ -150,11 +162,19 @@ app.post(startPage, function (req, res) {
     req.session.username = post.username
     req.session.wachtwoord = post.wachtwoord
 
-    res.render('index', {
-      title: 'Home',
-      credentials: {
-        user: post.username,
-        pass: post.wachtwoord
+    last_sqlite_entry(function(data) {
+      try {
+        latest_stats = JSON.parse(data)
+        res.render('index', {
+          title: 'Home',
+          credentials: {
+            user: post.username,
+            pass: post.wachtwoord
+          },
+          stats: latest_stats
+        })
+      } catch (error) {
+        logger(error, 'red')
       }
     })
   })
