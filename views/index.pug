@@ -114,7 +114,7 @@ html
           if credentials
             script(src='https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js')
             script.
-              var socket = io('http://192.168.2.17:8080/?username=#{credentials.user}&password=#{credentials.pass}', {
+              var socket = io('http://192.168.68.60:8080/?username=#{credentials.user}&password=#{credentials.pass}', {
                 reconnection: true,
                 reconnectionDelay: 1000,
                 reconnectionDelayMax: 3000,
