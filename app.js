@@ -25,7 +25,7 @@ const analyticsEvent = require('./analytics.js').analyticsEvent
 // Paar algemene variabelen:
 var startPage = '/'
 const testIPaddress = '192.168.2.18'
-const liveIPaddress = '192.168.2.17'
+const liveIPaddress = '192.168.68.60'
 
 /*
  * Schema voor het in- en uitschakelen van de boiler.
